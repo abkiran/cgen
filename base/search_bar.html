@@ -1,0 +1,141 @@
+<!-- SEARCH BAR -->
+<div class="row search-bar <?php if (get_arg($ROW[0],'IS_SEARCH') ) echo 'collapse.in'; else echo 'collapse';?>">
+<div class="col-sm-10 col-sm-offset-1">
+
+<div class="panel panel-info">
+	<!-- SEARCH HEADING -->
+	<div class="panel-heading"><h2 class="panel-title"><span class="glyphicon glyphicon-search"></span>	Search</h2></div>
+
+	<!-- SEARCH PANEL BODY -->
+	<div class="panel-body well no-margin">
+		<form method="post" 
+			id="AbstractorDocSearchForm" 
+			name="AbstractorDocSearchForm" 
+			action="#" 
+			class="form-group"> 
+
+		<!-- FIELDS -->
+				<!-- Document -->
+				<div class="form-group col-sm-2 mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<label class="mdl-textfield__label" for="document">Document</label>
+					<input type="text" 
+						id="document" 
+						name="document" 
+						value="<?php echo $document; ?>" 
+						class="mdl-textfield__input <?php if ($document) echo 'search-highlight	';?>" 
+					/>
+				</div>
+				<!-- Url -->
+				<div class="form-group col-sm-2 mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<label class="mdl-textfield__label" for="url">Url</label>
+					<input type="text" 
+						id="url" 
+						name="url" 
+						value="<?php echo $url; ?>" 
+						class="mdl-textfield__input <?php if ($url) echo 'search-highlight	';?>" 
+					/>
+				</div>
+				<!-- Description -->
+				<div class="form-group col-sm-2 mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<label class="mdl-textfield__label" for="description">Description</label>
+					<input type="text" 
+						id="description" 
+						name="description" 
+						value="<?php echo $description; ?>" 
+						class="mdl-textfield__input <?php if ($description) echo 'search-highlight	';?>" 
+					/>
+				</div>
+				<!-- Created By -->
+				<div class="form-group col-sm-2 mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<label class="mdl-textfield__label" for="created_by">Created By</label>
+					<input type="text" 
+						id="created_by" 
+						name="created_by" 
+						value="<?php echo $created_by; ?>" 
+						class="mdl-textfield__input <?php if ($created_by) echo 'search-highlight	';?>" 
+					/>
+				</div>
+				<!-- Created Dt -->
+				<div class="form-group col-sm-2 mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<label class="mdl-textfield__label" for="created_dt">Created Dt</label>
+					<input type="text" 
+						id="created_dt" 
+						name="created_dt" 
+						value="<?php echo $created_dt; ?>" 
+						class="mdl-textfield__input <?php if ($created_dt) echo 'search-highlight	';?>" 
+					/>
+				</div>
+				<!-- Modified By -->
+				<div class="form-group col-sm-2 mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<label class="mdl-textfield__label" for="modified_by">Modified By</label>
+					<input type="text" 
+						id="modified_by" 
+						name="modified_by" 
+						value="<?php echo $modified_by; ?>" 
+						class="mdl-textfield__input <?php if ($modified_by) echo 'search-highlight	';?>" 
+					/>
+				</div>
+				<!-- Last Modified -->
+				<div class="form-group col-sm-2 mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<label class="mdl-textfield__label" for="last_modified">Last Modified</label>
+					<input type="text" 
+						id="last_modified" 
+						name="last_modified" 
+						value="<?php echo $last_modified; ?>" 
+						class="mdl-textfield__input <?php if ($last_modified) echo 'search-highlight	';?>" 
+					/>
+				</div>
+				<!-- Is Deleted -->
+				<div class="form-group col-sm-2">
+					<div><label for="is_deleted">Is Deleted</label></div>
+					<div class="radio-inline">
+						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
+							<input 
+								type="radio" 
+								name="is_deleted" 
+								id="is_deleted" 
+								value="1" 
+								class="mdl-radio__button"
+								<?php if ($is_deleted == '1') { echo 'checked'; } ?>
+							>Yes
+						</label>
+					</div>
+					<div class="radio-inline">
+						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
+							<input 
+								type="radio" 
+								name="is_deleted" 
+								id="is_deleted" 
+								value="0" 
+								class="mdl-radio__button"
+								<?php if ($is_deleted == '0') { echo 'checked'; } ?>
+							>No
+						</label>
+					</div>
+				</div>
+
+		<div class="col-sm-12 large-padding">
+			<button class="btn med-margin mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="AbstractorDocSearchButton"><span class="glyphicon glyphicon-search"></span> Search</button>
+			| <a href="<?php echo BASEURL; ?>/index.php?mod=admin&ent=abstractordoc&go=list" class="clear-search btn-link get-inpage">Clear search </a> 
+		</div>
+		</form>
+		</div> <!-- end panel-body -->
+	</div> <!-- end panel -->
+</div></div> <!-- end col and row -->
+
+
+
+<script>
+	$(document).ready(function(){
+	console.log("Ready to go");
+		// Search ABSTRACTORDOC button
+		$('#AbstractorDocSearchButton').click(function(){
+			var data=$('#AbstractorDocSearchForm').serialize();
+			get_inpage("<?php echo BASEURL; ?>/index.php?mod=admin&ent=abstractordoc&go=list&"+data);
+			//document.location.href="<?php echo make_url('go=list',NULL,false); ?>&"+data;
+			return false;
+		});
+	});
+</script>
+
+
