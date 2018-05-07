@@ -31,7 +31,7 @@ class Cgen extends CI_Controller {
 		$ROW=Array();
 		$TABLES=$this->db->query("Show TABLES")->result_array();
 		
-		exec("cp -r ".OUTPUT_DIR."ci_base ".OUTPUT_DIR.$db_name);
+		exec("cp -r ".BASE_DIR."base/ci_base ".OUTPUT_DIR.$db_name);
 		
 		for ($i=0; $i < $TABLES[0]['nrows']; $i++) { 
 			
@@ -142,6 +142,75 @@ class Cgen extends CI_Controller {
 
 		echo "<a href=".OUTPUT_URL.$db_name."> Launch $db_name </a>";
 		exit;
+	}
+
+	public function gen_queries($db_name)
+	{
+
+		// $this->db->close();
+		// $dsn = 'mysql://root:@localhost/$db_name';
+		// $this->load->database($dsn);
+
+		// $this->create_dir(OUTPUT_DIR,$db_name);
+		$ROW=Array();
+		$TABLES=$this->db->query("Show TABLES")->result_array();
+		
+		exec("cp -r ".BASE_DIR."base/ci_base ".OUTPUT_DIR.$db_name);
+		
+		for ($i=0; $i < $TABLES[0]['nrows']; $i++) { 
+			
+			$fields=$this->db->query("DESCRIBE ".$TABLES[$i]['Tables_in_'.$db_name])->result_array();
+			$table_name=$TABLES[$i]['Tables_in_'.$db_name];
+
+			// Get primary key and unique key
+			$pk = $this->db->query("SELECT column_name FROM information_schema.COLUMNS WHERE table_name = '$table_name' AND table_schema = '".$db_name."' AND column_key='PRI'")->result_array();
+			$pk = $this->get_arg($pk[0],'column_name');
+			// $uk = $this->db->query("SELECT column_name FROM information_schema.COLUMNS WHERE table_name = '$table_name' AND table_schema = '".$db_name."' AND column_key='UNI'")->result_array()[0]['column_name'];
+			
+			$table=strtolower($TABLES[$i]['Tables_in_'.$db_name]);
+			$module=substr(preg_replace('/(?<!\ )[A-Z]/', ' $0', $TABLES[$i]['Tables_in_'.$db_name]),1);
+			echo "<br><br><br><br>**********$table_name***************<br><br><br><br>";
+			$fn = $fv = $fvars = $frep = Array();
+			for ($z=0; $z < $fields[0]['nrows']; $z++) {
+				array_push($fn, $fields[$z]['Field']);
+				array_push($fvars, "$".$fields[$z]['Field']);
+				array_push($frep, $fields[$z]['Field']."='$".$fields[$z]['Field']."'");
+			}
+
+			$field_names=implode(',', $fn);
+			$field_vars=implode(',', $fvars);
+			$field_vars1=sprintf("'%s'", implode("','", $fvars));
+			$field_rep=implode(',', $frep);
+			echo $field_names."<br><br>";
+			echo $field_vars."<br><br>";
+			echo $field_rep;
+
+
+			$privatekey="";
+			$file_path=OUTPUT_DIR.$db_name.'/';
+
+
+			
+			//Create directories
+			$this->create_dir($file_path,'queries');
+			$sql = $file_path."queries/$table_name.php";
+
+			$file = fopen($sql,"w+");
+			fwrite($file, $privatekey);
+			fclose($file);
+
+			ob_start();
+			include(BASE_DIR."base/sql.php");
+			file_put_contents($sql, ob_get_contents()); 
+			ob_get_clean();
+			// $sql = "INSERT 
+ 		// 		INTO 
+		 // 			$table_name 
+			// 	$fields
+			// 	VALUES 
+			// 	($field_values)";
+			// echo ""
+		}
 	}
 
 	public function print_arr($arr) {
