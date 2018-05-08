@@ -1,92 +1,109 @@
 <?php echo '<?php'; ?>
- 
-class <?php echo ucfirst($table); ?> extends CI_Controller{
-	function __construct()
-	{
-		parent::__construct();
-		$this->load->model('<?php echo ucfirst($table); ?>_model');
-	} 
 
-	/*
-	 * Listing of <?php echo $table; ?>
-	 */
-	function index()
-	{
-		$data['<?php echo $table; ?>'] = $this-><?php echo ucfirst($table); ?>_model->get_all_<?php echo $table; ?>();
-		
-		$data['_view'] = '<?php echo $table; ?>/index';
-		$this->load->view('layouts/main',$data);
-	}
+namespace App\Http\Controllers;
 
-	/*
-	 * Adding a new <?php echo $table; ?>
-	 */
-	function add()
-	{   
-		if(isset($_POST) && count($_POST) > 0)     
-		{   
-			$params = array(
-<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { ?>
-				'<?php echo $fields[$z]['Field']; ?>' => $this->input->post('<?php echo $fields[$z]['Field']; ?>'),
+use App\Http\Controllers\Controller;
+use App\Models\<?php echo ucfirst($table); ?>;
+use Illuminate\Http\Request;
+
+class <?php echo $class; ?>Controller extends Controller
+{
+    public $viewDir = "admin.<?php echo $table; ?>";
+
+    public function index()
+    {
+        $records = <?php echo ucfirst($table); ?>::paginate(\Config::get('constants.rows_per_page'));
+        $records->total();
+        return $this->view("index", ['rows' => $records]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return  \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return $this->view("create");
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param    \Illuminate\Http\Request  $request
+     * @return  \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        // dd($request->all());
+
+        $this->validate($request, [
+<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { 
+        if($fields[$z]['Field']=='id') continue;
+        $required = "";
+        $type_vals = explode('(', $fields[$z]['Type']);
+        if(isset($type_vals[1])) $type_vals[1] = rtrim($type_vals[1],')');
+        else $type_vals[1] = 100;
+        if($type_vals[0] != 'int') $type_vals[0] = 'string';
+
+        
+        if($fields[$z]['Null']!='YES') $required = "required|";
+        ?>
+            '<?php echo $fields[$z]['Field']; ?>' => '<?php echo $required; ?><?php echo $type_vals[0]; ?>|max:<?php echo $type_vals[1] ?>',
 <?php } ?>
-			);
-			
-			$<?php echo $table; ?>_id = $this-><?php echo ucfirst($table); ?>_model->add_<?php echo $table; ?>($params);
-			redirect('<?php echo $table; ?>/index');
-		}
-		else
-		{
-			$data['_view'] = '<?php echo $table; ?>/add';
-			$this->load->view('layouts/main',$data);
-		}
-	}  
+        ]);
+        // dd($request->all());
+        <?php echo ucfirst($table); ?>::create($request->all());
 
-	/*
-	 * Editing a <?php echo $table; ?>
-	 */
-	function edit($<?php echo $pk; ?>)
-	{   
-		// check if the <?php echo $table; ?> exists before trying to edit it
-		$data['<?php echo $table; ?>'] = $this-><?php echo ucfirst($table); ?>_model->get_<?php echo $table; ?>($<?php echo $pk; ?>);
-		
-		if(isset($data['<?php echo $table; ?>']['<?php echo $pk; ?>']))
-		{
-			if(isset($_POST) && count($_POST) > 0)     
-			{   
-				$params = array(
-<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { ?>
-				'<?php echo $fields[$z]['Field']; ?>' => $this->input->post('<?php echo $fields[$z]['Field']; ?>'),
+        return redirect('/admin/settings/<?php echo $module; ?>')->with('message','New <?php echo $module; ?> has been created.');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @return  \Illuminate\Http\Response
+     */
+    public function edit(Request $request, <?php echo ucfirst($table); ?> $<?php echo $module; ?>)
+    {
+        return $this->view("edit", ['row' => $<?php echo $module; ?>]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $<?php echo $module; ?> = <?php echo ucfirst($table); ?>::find($id);
+<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { 
+        if($fields[$z]['Field']=='id') continue;
+        ?>
+        $<?php echo $module; ?>-><?php echo $fields[$z]['Field']; ?> = $request->get('<?php echo $fields[$z]['Field']; ?>');
 <?php } ?>
-				);
+        $<?php echo $module; ?>->save();
+        return redirect('admin/settings/<?php echo $module; ?>')->with('message','<?php echo ucfirst($module); ?> details are updated.');
+    }
 
-				$this-><?php echo ucfirst($table); ?>_model->update_<?php echo $table; ?>($<?php echo $pk; ?>,$params);            
-				redirect('<?php echo $table; ?>/index');
-			}
-			else
-			{
-				$data['_view'] = '<?php echo $table; ?>/edit';
-				$this->load->view('layouts/main',$data);
-			}
-		}
-		else
-			show_error('The <?php echo $table; ?> you are trying to edit does not exist.');
-	} 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @return  \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $<?php echo $module; ?> = <?php echo ucfirst($table); ?>::find($id);
+        $<?php echo $module; ?>->delete();
+        return redirect('admin/settings/<?php echo $module; ?>')->with('message','<?php echo ucfirst($module); ?> has been deleted.');
+    }
 
-	/*
-	 * Deleting <?php echo $table; ?>
-	 */
-	function remove($<?php echo $pk; ?>)
-	{
-		$<?php echo $table; ?> = $this-><?php echo ucfirst($table); ?>_model->get_<?php echo $table; ?>($<?php echo $pk; ?>);
+    
+    protected function view($view, $data = [])
+    {
+        return view($this->viewDir . "." . $view, $data);
+    }
 
-		// check if the <?php echo $table; ?> exists before trying to delete it
-		if(isset($<?php echo $table; ?>['<?php echo $pk; ?>']))
-		{
-			$this-><?php echo ucfirst($table); ?>_model->delete_<?php echo $table; ?>($<?php echo $pk; ?>);
-			redirect('<?php echo $table; ?>/index');
-		}
-		else
-			show_error('The <?php echo $table; ?> you are trying to delete does not exist.');
-	}
-	
+
 }

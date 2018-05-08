@@ -35,7 +35,7 @@ class Cgen extends CI_Controller {
 		
 		for ($i=0; $i < $TABLES[0]['nrows']; $i++) { 
 			
-			$fields=$this->db->query("DESCRIBE ".$TABLES[$i]['Tables_in_'.$db_name])->result_array();
+			$fields=$this->db->query("DESCRIBE `".$TABLES[$i]['Tables_in_'.$db_name]."`")->result_array();
 			$table_name=$TABLES[$i]['Tables_in_'.$db_name];
 
 			// Get primary key and unique key
@@ -43,28 +43,55 @@ class Cgen extends CI_Controller {
 			$pk = $this->get_arg($pk[0],'column_name');
 			// $uk = $this->db->query("SELECT column_name FROM information_schema.COLUMNS WHERE table_name = '$table_name' AND table_schema = '".$db_name."' AND column_key='UNI'")->result_array()[0]['column_name'];
 			
-			$table=substr(strtolower($TABLES[$i]['Tables_in_'.$db_name]),1);
-			$module=substr(preg_replace('/(?<!\ )[A-Z]/', ' $0', $TABLES[$i]['Tables_in_'.$db_name]),1);
+			$table=strtolower($TABLES[$i]['Tables_in_'.$db_name]);
+			$module=str_replace('_', ' ', $TABLES[$i]['Tables_in_'.$db_name]);
+			$class = str_replace(" ", '', ucwords($module));
+			// echo $module;
+			// echo $class;
 
 			// copy(BASE_DIR.'base/ci_base/',OUTPUT_DIR.$db_name);
 			// exec("mv ".OUTPUT_DIR."ci_base ".OUTPUT_DIR.$db_name);
 
-			// $this->print_arr($table);
+			$fn = $fv = $fvars = $frep = Array();
+			for ($z=0; $z < $fields[0]['nrows']; $z++) {
+				if($fields[$z]['Field']=='id') continue;
+				array_push($fn, $fields[$z]['Field']);
+				array_push($fvars, "$".$fields[$z]['Field']);
+				array_push($frep, $fields[$z]['Field']."='$".$fields[$z]['Field']."'");
+			}
+
+			$field_names=implode(',', $fn);
+			$field_names_s=sprintf("'%s'", implode("','", $fn));
+			$field_vars=implode(',', $fvars);
+			$field_vars1=sprintf("'%s'", implode("','", $fvars));
+			$field_rep=implode(',', $frep);
+			// echo $field_names."<br><br>";
+			// echo $field_vars."<br><br>";
+			// echo $field_rep;
+
+
+			// $this->print_arr($fields);
 			$privatekey="";
 			$file_path=OUTPUT_DIR.$db_name.'/';
 
 			
 			//Create directories
-			$this->create_dir($file_path.'application/views',$table);
 			
 
+			$this->create_dir($file_path, "controllers");
+			$this->create_dir($file_path, "models");
+			$this->create_dir($file_path, "views");
+			$this->create_dir($file_path, "tests");
+
+			$this->create_dir($file_path.'views',$table);
 			
-			$controller=$file_path."application/controllers/".ucfirst($table).".php";
-			$model=$file_path."application/models/".ucfirst($table)."_model.php";
-			$index=$file_path."application/views/$table/index.php";
-			$add=$file_path."application/views/$table/add.php";
-			$edit=$file_path."application/views/$table/edit.php";
-			$main=$file_path."application/views/layouts/main.php";
+			$controller=$file_path."controllers/".$class."Controller.php";
+			$model=$file_path."models/".$class.".php";
+			$index=$file_path."views/$table/index.blade.php";
+			$add=$file_path."views/$table/create.blade.php";
+			$edit=$file_path."views/$table/edit.blade.php";
+			$test=$file_path."tests/".$class."Test.php";
+			// $main=$file_path."views/layouts/main.php";
 			// $searchbar=$file_path."/search_bar.html";
 
 			//Create default files
@@ -83,9 +110,13 @@ class Cgen extends CI_Controller {
 			$file = fopen($add,"w+");
 			fwrite($file, $privatekey);
 			fclose($file);
-			$file = fopen($main,"w+");
+			$file = fopen($test,"w+");
 			fwrite($file, $privatekey);
 			fclose($file);
+
+			// $file = fopen($main,"w+");
+			// fwrite($file, $privatekey);
+			// fclose($file);
 			// $file = fopen($searchbar,"w+");
 			// fwrite($file, $privatekey);
 			// fclose($file);
@@ -94,14 +125,7 @@ class Cgen extends CI_Controller {
 			// fwrite($file, $privatekey);
 			// fclose($file);
 			chmod(OUTPUT_DIR,0777);
-			// echo nl2br("
-			// 	,$module > List,go_".$table."_index,,0,0,2017-01-11 9:27:19,0,2017-01-11 9:27:19,1,0
-			// 		,$module > Add,go_".$table."_view,ADD,0,0,2017-01-12 9:27:19,0,2017-01-12 9:27:19,2,0
-			// 		,$module > View,go_".$table."_view,VIEW,0,0,2017-01-12 9:27:19,0,2017-01-12 9:27:19,2,0
-			// 		,$module > Modify,go_".$table."_view,EDIT,0,0,2017-01-12 9:27:19,0,2017-01-12 9:27:19,2,0
-			// 		,$module > Add,do_".$table."_save,ADD,0,0,2017-01-13 9:27:19,0,2017-01-13 9:27:19,3,0
-			// 		,$module > Update,do_".$table."_save,UPDATE,0,0,2017-01-13 9:27:19,0,2017-01-13 9:27:19,3,0
-			// 		,$module > Delete,do_".$table."_delete,,0,0,2017-01-13 9:27:19,0,2017-01-13 9:27:19,3,0");
+			echo nl2br("Route::resource('admin/settings/$table', '".$class."Controller');<br>");
 			// Put contents
 			ob_start();
 			include(BASE_DIR."base/controller.php");
@@ -111,6 +135,11 @@ class Cgen extends CI_Controller {
 			ob_start();
 			include(BASE_DIR."base/model.php");
 			file_put_contents($model, ob_get_contents()); 
+			ob_get_clean();
+			
+			ob_start();
+			include(BASE_DIR."base/test.php");
+			file_put_contents($test, ob_get_contents()); 
 			ob_get_clean();
 			
 			//print_arr($fields);
@@ -125,7 +154,7 @@ class Cgen extends CI_Controller {
 			ob_get_clean();
 
 			ob_start();
-			include(BASE_DIR."base/add.php");
+			include(BASE_DIR."base/create.php");
 			file_put_contents($add, ob_get_contents()); 
 			ob_get_clean();
 

@@ -1,52 +1,38 @@
 <?php echo '<?php'; ?>
- 
-class <?php echo ucfirst($table); ?>_model extends CI_Model
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class <?php echo $class; ?> extends Model
 {
-    function __construct()
-    {
-        parent::__construct();
-    }
-    
-    /*
-     * Get <?php echo $table; ?> by <?php echo $pk; ?>
+    /**
+     * table name
+     *
+     * @var string
      */
-    function get_<?php echo $table; ?>($<?php echo $pk; ?>)
-    {
-        return $this->db->get_where('<?php echo $table_name; ?>',array('<?php echo $pk; ?>'=>$<?php echo $pk; ?>))->row_array();
-    }
-        
-    /*
-     * Get all <?php echo $table; ?>
+    public $table = '<?php echo $table_name; ?>';
+
+    /**
+     * timestamps disabled
+     *
+     * @var string
      */
-    function get_all_<?php echo $table; ?>()
-    {
-        $this->db->order_by('<?php echo $pk; ?>', 'desc');
-        return $this->db->get('<?php echo $table_name; ?>')->result_array();
-    }
-        
-    /*
-     * function to add new <?php echo $table; ?>
+    public $timestamps = false;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
-    function add_<?php echo $table; ?>($params)
-    {
-        $this->db->insert('<?php echo $table_name; ?>',$params);
-        return $this->db->insert_id();
-    }
-    
-    /*
-     * function to update <?php echo $table; ?>
+    protected $fillable = [
+        <?php echo $field_names_s; ?> ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
      */
-    function update_<?php echo $table; ?>($<?php echo $pk; ?>,$params)
-    {
-        $this->db->where('<?php echo $pk; ?>',$<?php echo $pk; ?>);
-        return $this->db->update('<?php echo $table_name; ?>',$params);
-    }
-    
-    /*
-     * function to delete <?php echo $table; ?>
-     */
-    function delete_<?php echo $table; ?>($<?php echo $pk; ?>)
-    {
-        return $this->db->delete('<?php echo $table_name; ?>',array('<?php echo $pk; ?>'=>$<?php echo $pk; ?>));
-    }
+    protected $hidden = [
+    ];
 }
