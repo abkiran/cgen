@@ -25,14 +25,28 @@ class <?php echo $class; ?> extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        <?php echo $field_names_s; ?> ];
+    protected $fillable = [ <?php echo $field_names_s; ?> ];
 
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
-    protected $hidden = [
-    ];
+    protected $hidden = [ 'id' ];
+
+    public function select_data($search, $field, $order_by, $order_by_type)
+    {
+        $data = <?php echo $class; ?>::select('id, '<?php echo $field_names_s; ?>);
+
+        if ($search) {
+            $data->where($field, 'like', '%' . $search . '%');
+        }
+
+        if ($order_by) {
+            $data->orderby($order_by, $order_by_type);
+        } else {
+            $data->orderby('id', 'asc');
+        }
+        return $data->paginate(\Config::get('constants.rows_per_page'));
+    }
 }

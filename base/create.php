@@ -25,7 +25,7 @@
                         @csrf
 <?php for ($z=0; $z < $fields[0]['nrows']; $z++) { 
     if ( $fields[$z]['Extra'] == 'auto_increment' ) continue;
-    $f = ucwords(str_replace('_', ' ', $fields[$z]['Field'])); ?>
+    $f = ucwords(str_replace('_', ' ', $fields[$z]['Field']));?>
                         {!! make_input_text($errors, "<?php echo $f; ?>", "text", "<?php echo $fields[$z]['Field']; ?>") !!} 
 <?php } ?>
                     </div>
