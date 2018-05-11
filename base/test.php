@@ -8,7 +8,7 @@ class <?php echo $class; ?>Test extends TestCase
     public function testIndex()
     {
         $this->do_login();
-        $response = $this->get('admin/settings/<?php echo $table; ?>');
+        $response = $this->get('admin/system/<?php echo $table; ?>');
 
         $response->assertSuccessful();
         $response->assertViewIs('admin.<?php echo $table; ?>.index');
@@ -21,7 +21,7 @@ class <?php echo $class; ?>Test extends TestCase
     public function testCreate()
     {
         $this->do_login();
-        $response = $this->get('admin/settings/<?php echo $table; ?>/create');
+        $response = $this->get('admin/system/<?php echo $table; ?>/create');
 
         $response->assertSuccessful();
         $response->assertViewIs('admin.<?php echo $table; ?>.create');
@@ -30,7 +30,7 @@ class <?php echo $class; ?>Test extends TestCase
     public function testEdit()
     {
         $this->do_login();
-        $response = $this->get('admin/settings/<?php echo $table; ?>/1/edit');
+        $response = $this->get('admin/system/<?php echo $table; ?>/1/edit');
 
         $response->assertSuccessful();
         $response->assertViewIs('admin.<?php echo $table; ?>.edit');

@@ -6,7 +6,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('admin/settings/<?php echo $table; ?>')}}"><?php echo ucwords($module); ?>s</a></li>
+        <li><a href="{{url('admin/system/<?php echo $table; ?>')}}"><?php echo ucwords($module); ?>s</a></li>
         <li class="active">List</li>
     </ol>
 </section>
@@ -27,7 +27,9 @@
                             </div>
                             <div class="col-md-5 col-xs-6">
                                 <select name="field" class="form-control fsel pull-left m-5">
-<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { $f = ucwords(str_replace('_', ' ', $fields[$z]['Field'])); ?>
+<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { 
+    if ( $fields[$z]['Extra'] == 'auto_increment' ) continue;
+    $f = ucwords(str_replace('_', ' ', $fields[$z]['Field'])); ?>
                                     <option value="<?php echo $fields[$z]['Field']; ?>" {{$data['field']=='<?php echo $fields[$z]['Field']; ?>'?'selected':''}}><?php echo $f ?></option>
 <?php } ?>
                                 </select>
@@ -48,14 +50,17 @@
                 <div class="box-body table-responsive no-padding">
                     <table class="table table-hover">
                         <tr>
-<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { $f = ucwords(str_replace('_', ' ', $fields[$z]['Field'])); ?>
-                            <th><a href="{{url('admin/settings/<?php echo $table; ?>')}}?order_by=<?php echo $fields[$z]['Field']; ?>&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $fields[$z]['Field']; ?>'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $fields[$z]['Field']; ?>'?'asc':'desc'}}" aria-hidden="true"></i></a><?php echo $f; ?></th>
+<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { 
+    if ( $fields[$z]['Extra'] == 'auto_increment' ) continue;
+    $f = ucwords(str_replace('_', ' ', $fields[$z]['Field'])); ?>
+                            <th><?php echo $f; ?><a href="{{url('admin/system/<?php echo $table; ?>')}}?order_by=<?php echo $fields[$z]['Field']; ?>&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $fields[$z]['Field']; ?>'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $fields[$z]['Field']; ?>'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
 <?php } ?>
                             <th>Actions</th>
                         </tr>
                         @foreach ($rows as $row)
                         <tr>
-<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { ?>
+<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { 
+    if ( $fields[$z]['Extra'] == 'auto_increment' ) continue;?>
                         <td><?php echo '<?php'; ?> echo $row['<?php echo $fields[$z]['Field']; ?>']; ?></td>
 <?php } ?>
                             <td><a href="{{action('<?php echo $class; ?>Controller@edit', $row->id)}}" class="btn btn-info btn-xs pull-left m-r-5">Edit</a>
@@ -87,7 +92,7 @@ $(document).ready(function() {
     $('.search').click(function(event) {
         search = $('input[name=search]').val();
         field = $('select[name=field]').val();
-        window.location.href = "{{url('admin/settings/<?php echo $table; ?>')}}?field="+field+"&search="+search;
+        window.location.href = "{{url('admin/system/<?php echo $table; ?>')}}?field="+field+"&search="+search;
     });
 });
 </script>

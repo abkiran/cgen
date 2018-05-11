@@ -2,11 +2,11 @@
 @section('content')
 <section class="content-header">
     <h1>
-        Modify <?php echo ucwords($module); ?>
+        System
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('admin/settings/<?php echo $table; ?>')}}"><?php echo ucwords($module); ?>s</a></li>
+        <li><a href="{{url('admin/system/<?php echo $table; ?>')}}"><?php echo ucwords($module); ?>s</a></li>
         <li class="active">Modify</li>
     </ol>
 </section>
@@ -16,7 +16,7 @@
         <div class="col-xs-12">
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Update <?php echo ucfirst($table); ?> Details</h3>
+                    <h3 class="box-title">Modify <?php echo ucwords($module); ?></h3>
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
@@ -33,7 +33,9 @@
                     <!-- /.box-body -->
                     <div class="box-footer">
                         <button type="submit" class="btn btn-info pull-right">Save</button>
-                        <button type="reset" class="btn btn-default pull-left">Cancel</button>
+                        <a href="{{url('admin/system/<?php echo $table; ?>')}}">
+                            <button type="button" class="btn btn-default pull-left">Cancel</button>
+                        </a>
                     </div>
                     <!-- /.box-footer -->
                 </form>

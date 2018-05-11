@@ -36,7 +36,7 @@ class <?php echo $class; ?> extends Model
 
     public function select_data($search, $field, $order_by, $order_by_type)
     {
-        $data = <?php echo $class; ?>::select('id, '<?php echo $field_names_s; ?>);
+        $data = <?php echo $class; ?>::select('id', <?php echo $field_names_s; ?>);
 
         if ($search) {
             $data->where($field, 'like', '%' . $search . '%');

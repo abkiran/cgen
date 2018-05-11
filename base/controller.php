@@ -67,7 +67,7 @@ class <?php echo $class; ?>Controller extends Controller
 
         <?php echo $class; ?>::create($request->all());
 
-        return redirect('/admin/settings/<?php echo $table; ?>')->with('message','New <?php echo $module; ?> has been created.');
+        return redirect('/admin/system/<?php echo $table; ?>')->with('message','New <?php echo $module; ?> has been created.');
     }
 
     /**
@@ -109,10 +109,10 @@ class <?php echo $class; ?>Controller extends Controller
 <?php for ($z=0; $z < $fields[0]['nrows']; $z++) { 
         if($fields[$z]['Field']=='id') continue;
         ?>
-        $<?php echo $module; ?>-><?php echo $fields[$z]['Field']; ?> = $request->get('<?php echo $fields[$z]['Field']; ?>');
+        $<?php echo $table; ?>-><?php echo $fields[$z]['Field']; ?> = $request->get('<?php echo $fields[$z]['Field']; ?>');
 <?php } ?>
-        $<?php echo $module; ?>->save();
-        return redirect('admin/settings/<?php echo $module; ?>')->with('message', '<?php echo ucfirst($module); ?> details are updated.');
+        $<?php echo $table; ?>->save();
+        return redirect('admin/system/<?php echo $table; ?>')->with('message', '<?php echo ucfirst($module); ?> details are updated.');
     }
 
     /**
@@ -123,8 +123,8 @@ class <?php echo $class; ?>Controller extends Controller
     public function destroy($id)
     {
         $<?php echo $table; ?> = <?php echo $class; ?>::find($id);
-        $<?php echo $module; ?>->delete();
-        return redirect('admin/settings/<?php echo $module; ?>')->with('message', '<?php echo ucfirst($module); ?> has been deleted.');
+        $<?php echo $table; ?>->delete();
+        return redirect('admin/system/<?php echo $table; ?>')->with('message', '<?php echo ucfirst($module); ?> has been deleted.');
     }
 
     protected function view($view, $data = [])

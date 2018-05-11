@@ -32,7 +32,7 @@ class Cgen extends CI_Controller {
 		$TABLES=$this->db->query("Show TABLES")->result_array();
 		
 		exec("cp -r ".BASE_DIR."base/ci_base ".OUTPUT_DIR.$db_name);
-		
+
 		for ($i=0; $i < $TABLES[0]['nrows']; $i++) { 
 			
 			$fields=$this->db->query("DESCRIBE `".$TABLES[$i]['Tables_in_'.$db_name]."`")->result_array();
@@ -52,13 +52,41 @@ class Cgen extends CI_Controller {
 			// copy(BASE_DIR.'base/ci_base/',OUTPUT_DIR.$db_name);
 			// exec("mv ".OUTPUT_DIR."ci_base ".OUTPUT_DIR.$db_name);
 
-			$fn = $fv = $fvars = $frep = Array();
+			// $this->print_arr($fields);
+			$fn = $fv = $fvars = $frep = $row = Array();
 			for ($z=0; $z < $fields[0]['nrows']; $z++) {
+				$required = "";
+				
+				$row[$z]['field'] = $fields[$z]['Field'];
+				$row[$z]['label'] = ucwords(str_replace('_', ' ', $fields[$z]['Field']));
+
+		        $type_vals = explode('(', $fields[$z]['Type']);
+		        if(isset($type_vals[1])) $type_vals[1] = rtrim($type_vals[1],')');
+		        else $type_vals[1] = 100;
+
+		        if ($type_vals[0]=='enum') {
+		        	$row[$z]['enum'] = 1;
+		        	$row[$z]['enum_vals'] = explode(',', str_replace("'", "", $type_vals[1]));
+		        	$type_vals[1] = 50;
+		        } else {
+		        	$row[$z]['enum'] = 0;
+		        }
+		        if($type_vals[0] != 'int') $type_vals[0] = 'string';
+				
+				$row[$z]['type'] = $type_vals[0];
+				$row[$z]['size'] = $type_vals[1];
+
+		        
+		        if($fields[$z]['Null']!='YES') $required = "required";
+				$row[$z]['required'] = $required;
+
 				if($fields[$z]['Field']=='id') continue;
 				array_push($fn, $fields[$z]['Field']);
 				array_push($fvars, "$".$fields[$z]['Field']);
 				array_push($frep, $fields[$z]['Field']."='$".$fields[$z]['Field']."'");
 			}
+			$this->print_arr($row);
+
 
 			$field_names=implode(',', $fn);
 			$field_names_s=sprintf("'%s'", implode("','", $fn));
@@ -70,7 +98,6 @@ class Cgen extends CI_Controller {
 			// echo $field_rep;
 
 
-			// $this->print_arr($fields);
 			$privatekey="";
 			$file_path=OUTPUT_DIR.$db_name.'/';
 
