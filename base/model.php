@@ -25,16 +25,16 @@ class <?php echo $class; ?> extends Model
      *
      * @var array
      */
-    protected $fillable = [ <?php echo $field_names_s; ?> ];
+    protected $fillable = [<?php echo $field_names_s; ?>];
 
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
-    protected $hidden = [ 'id' ];
+    protected $hidden = ['id'];
 
-    public function select_data($search, $field, $order_by, $order_by_type)
+    public function selectData($search, $field, $order_by, $order_by_type)
     {
         $data = <?php echo $class; ?>::select('id', <?php echo $field_names_s; ?>);
 
@@ -47,6 +47,6 @@ class <?php echo $class; ?> extends Model
         } else {
             $data->orderby('id', 'asc');
         }
-        return $data->paginate(\Config::get('constants.rows_per_page'));
+        return $data->paginate(get_setting('rows_per_page'));
     }
 }

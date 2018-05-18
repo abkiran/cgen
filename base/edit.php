@@ -6,7 +6,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('admin/system/<?php echo $table; ?>')}}"><?php echo ucwords($module); ?>s</a></li>
+        <li><a href="{{url('admin/<?php echo $table; ?>')}}"><?php echo ucwords($module); ?>s</a></li>
         <li class="active">Modify</li>
     </ol>
 </section>
@@ -33,7 +33,7 @@
                     <!-- /.box-body -->
                     <div class="box-footer">
                         <button type="submit" class="btn btn-info pull-right">Save</button>
-                        <a href="{{url('admin/system/<?php echo $table; ?>')}}">
+                        <a href="{{url('admin/<?php echo $table; ?>')}}">
                             <button type="button" class="btn btn-default pull-left">Cancel</button>
                         </a>
                     </div>

@@ -6,7 +6,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('admin/system/<?php echo $table; ?>')}}"><?php echo ucwords($module); ?>s</a></li>
+        <li><a href="{{url('admin/<?php echo $table; ?>')}}"><?php echo ucwords($module); ?>s</a></li>
         <li class="active">List</li>
     </ol>
 </section>
@@ -53,7 +53,7 @@
 <?php for ($z=0; $z < $fields[0]['nrows']; $z++) { 
     if ( $fields[$z]['Extra'] == 'auto_increment' ) continue;
     $f = ucwords(str_replace('_', ' ', $fields[$z]['Field'])); ?>
-                            <th><?php echo $f; ?><a href="{{url('admin/system/<?php echo $table; ?>')}}?order_by=<?php echo $fields[$z]['Field']; ?>&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $fields[$z]['Field']; ?>'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $fields[$z]['Field']; ?>'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
+                            <th><?php echo $f; ?><a href="{{url('admin/<?php echo $table; ?>')}}?order_by=<?php echo $fields[$z]['Field']; ?>&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $fields[$z]['Field']; ?>'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $fields[$z]['Field']; ?>'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
 <?php } ?>
                             <th>Actions</th>
                         </tr>
@@ -67,7 +67,7 @@
                                 <form action="{{action('<?php echo $class; ?>Controller@destroy', $row->id)}}" method="post">
                                     @csrf
                                     <input name="_method" type="hidden" value="DELETE">
-                                    <button class="btn btn-danger btn-xs" type="submit">Delete</button>
+                                    <button class="btn btn-danger btn-xs" type="submit" onclick="return confirm('Are you sure you want to delete {{ $row['<?php echo $fields[1]['Field']; ?>']??'' }}?');">Delete</button>
                                 </form>
                             </td>
                         </tr>
@@ -92,7 +92,7 @@ $(document).ready(function() {
     $('.search').click(function(event) {
         search = $('input[name=search]').val();
         field = $('select[name=field]').val();
-        window.location.href = "{{url('admin/system/<?php echo $table; ?>')}}?field="+field+"&search="+search;
+        window.location.href = "{{url('admin/<?php echo $table; ?>')}}?field="+field+"&search="+search;
     });
 });
 </script>
