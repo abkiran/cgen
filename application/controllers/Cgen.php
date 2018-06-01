@@ -56,39 +56,66 @@ class Cgen extends CI_Controller
 
             // $this->print_arr($fields);
             $fn = $fv = $fvars = $frep = $row = array();
+            $k=0;
             for ($z=0; $z < $fields[0]['nrows']; $z++) {
                 $required = "";
+                $input = "text";
+                $css_class = "";
+
+                if ($fields[$z]['Field'] == 'created_at' || $fields[$z]['Field'] == 'modified_at') {
+                    continue;
+                }
+                if ($fields[$z]['Field']=='id') continue;
                 
-                $row[$z]['field'] = $fields[$z]['Field'];
-                $row[$z]['label'] = ucwords(str_replace('_', ' ', $fields[$z]['Field']));
+                $row[$k]['field'] = $fields[$z]['Field'];
+                $row[$k]['label'] = ucwords(str_replace('_', ' ', $fields[$z]['Field']));
 
                 $type_vals = explode('(', $fields[$z]['Type']);
                 if (isset($type_vals[1])) $type_vals[1] = rtrim($type_vals[1], ')');
                 else $type_vals[1] = 100;
 
                 if ($type_vals[0]=='enum') {
-                    $row[$z]['enum'] = 1;
-                    $row[$z]['enum_vals'] = explode(',', str_replace("'", "", $type_vals[1]));
+                    $row[$k]['enum'] = 1;
+                    $row[$k]['enum_vals'] = explode(',', str_replace("'", "", $type_vals[1]));
                     $type_vals[1] = 50;
-                } else {
-                    $row[$z]['enum'] = 0;
+                    $input = 'select';
+                } elseif ($type_vals[0]=='text'){
+                    $type_vals[1] = '';
+                    $input = 'textarea';
+                } elseif ($type_vals[0]=='tinyint'){
+                    $input = "radio";
+                } elseif ($type_vals[0]=='date'){
+                    $css_class = 'datepicker';
+                } elseif ($type_vals[0]=='datetime'){
+                    $css_class = 'datetimepicker';
+                }  else {
+                    $row[$k]['enum'] = 0;
+                }
+
+                if ($fields[$z]['Field']=='email') {
+                    $input = 'email';
+                } elseif ($fields[$z]['Field']=='password') {
+                    $input = 'password';
                 }
                 if ($type_vals[0] != 'int') $type_vals[0] = 'string';
                 
-                $row[$z]['type'] = $type_vals[0];
-                $row[$z]['size'] = $type_vals[1];
+                $row[$k]['type'] = $type_vals[0];
+                $row[$k]['size'] = $type_vals[1];
+                $row[$k]['input'] = $input;
+                $row[$k]['css_class'] = $css_class;
 
                 
                 if ($fields[$z]['Null']!='YES') $required = "required";
-                $row[$z]['required'] = $required;
-                $row[$z]['extra'] = $fields[$z]['Extra'];
-
-                if ($fields[$z]['Field']=='id') continue;
+                $row[$k]['required'] = $required;
+                $row[$k]['extra'] = $fields[$z]['Extra'];
                 array_push($fn, $fields[$z]['Field']);
                 array_push($fvars, "$".$fields[$z]['Field']);
                 array_push($frep, $fields[$z]['Field']."='$".$fields[$z]['Field']."'");
+                $k++;
+                $row[0]['nrows'] = $k;
             }
-
+            $this->print_arr($row);
+            // exit;
 
             $field_names=implode(',', $fn);
             $field_names_s=sprintf("'%s'", implode("', '", $fn));
@@ -212,7 +239,7 @@ class Cgen extends CI_Controller
         // $file_contents = str_replace("db_name", $db_name, $file_contents);
         // file_put_contents($file_path."application/config/database.php", $file_contents);
 
-        echo "<a href=".OUTPUT_URL.$db_name."> Launch $db_name </a>";
+        echo "<a href='".OUTPUT_URL.$db_name."/public'> Launch $db_name </a>";
         exit;
     }
 

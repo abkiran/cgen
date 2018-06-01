@@ -10,6 +10,7 @@
         <li class="active">List</li>
     </ol>
 </section>
+<input type="hidden" id="data-url" value="admin/<?php echo $table; ?>">
 <!-- Main content -->
 <section class="content">
     <div class="row">
@@ -18,7 +19,7 @@
                 <div class="box-header">
                     <h3 class="box-title"></h3>
                     <div class="col-md-6">
-                        <a href="{{action('<?php echo $class; ?>Controller@create')}}" class="btn btn-info btn-sm m-5">Create <?php echo ucwords($module); ?></a>
+                        <a href="{{action('<?php echo $class; ?>Controller@create')}}" class="btn btn-primary btn-sm m-5">Create <?php echo ucwords($module); ?></a>
                     </div>
 
                     <div class="col-md-6">
@@ -27,10 +28,9 @@
                             </div>
                             <div class="col-md-5 col-xs-6">
                                 <select name="field" class="form-control fsel pull-left m-5">
-<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { 
-    if ( $fields[$z]['Extra'] == 'auto_increment' ) continue;
-    $f = ucwords(str_replace('_', ' ', $fields[$z]['Field'])); ?>
-                                    <option value="<?php echo $fields[$z]['Field']; ?>" {{$data['field']=='<?php echo $fields[$z]['Field']; ?>'?'selected':''}}><?php echo $f ?></option>
+<?php for ($z=0; $z < $row[0]['nrows']; $z++) {
+    $f = ucwords(str_replace('_', ' ', $row[$z]['field'])); ?>
+                                    <option value="<?php echo $row[$z]['field']; ?>" {{$data['field']=='<?php echo $row[$z]['field']; ?>'?'selected':''}}><?php echo $f ?></option>
 <?php } ?>
                                 </select>
                             </div>
@@ -50,25 +50,19 @@
                 <div class="box-body table-responsive no-padding">
                     <table class="table table-hover">
                         <tr>
-<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { 
-    if ( $fields[$z]['Extra'] == 'auto_increment' ) continue;
-    $f = ucwords(str_replace('_', ' ', $fields[$z]['Field'])); ?>
-                            <th><?php echo $f; ?><a href="{{url('admin/<?php echo $table; ?>')}}?order_by=<?php echo $fields[$z]['Field']; ?>&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $fields[$z]['Field']; ?>'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $fields[$z]['Field']; ?>'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
+<?php for ($z=0; $z < $row[0]['nrows']; $z++) {
+    $f = ucwords(str_replace('_', ' ', $row[$z]['field'])); ?>
+                            <th><?php echo $f; ?><a href="{{url('admin/<?php echo $table; ?>')}}?order_by=<?php echo $row[$z]['field']; ?>&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $row[$z]['field']; ?>'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $row[$z]['field']; ?>'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
 <?php } ?>
                             <th>Actions</th>
                         </tr>
                         @foreach ($rows as $row)
-                        <tr>
-<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { 
-    if ( $fields[$z]['Extra'] == 'auto_increment' ) continue;?>
-                        <td><?php echo '<?php'; ?> echo $row['<?php echo $fields[$z]['Field']; ?>']; ?></td>
+                        <tr class="row-{{$row->id}}">
+<?php for ($z=0; $z < $row[0]['nrows']; $z++) { ?>
+                            <td>{{ $row['<?php echo $row[$z]['field']; ?>'] }}</td>
 <?php } ?>
-                            <td><a href="{{action('<?php echo $class; ?>Controller@edit', $row->id)}}" class="btn btn-info btn-xs pull-left m-r-5">Edit</a>
-                                <form action="{{action('<?php echo $class; ?>Controller@destroy', $row->id)}}" method="post">
-                                    @csrf
-                                    <input name="_method" type="hidden" value="DELETE">
-                                    <button class="btn btn-danger btn-xs" type="submit" onclick="return confirm('Are you sure you want to delete {{ $row['<?php echo $fields[1]['Field']; ?>']??'' }}?');">Delete</button>
-                                </form>
+                            <td><a href="{{action('<?php echo $class; ?>Controller@edit', $row->id)}}" class="btn btn-primary btn-xs pull-left m-r-5">Edit</a>
+                                <button class="btn btn-danger btn-xs delete" type="button" data-id="{{$row->id}}" data-name="{{ $row['<?php echo $row[0]['field']; ?>']??'' }}" data-url="admin/<?php echo $table; ?>" onclick="deleteRow(this)">Delete</button>
                             </td>
                         </tr>
                         @endforeach

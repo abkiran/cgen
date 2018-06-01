@@ -50,18 +50,8 @@ class <?php echo $class; ?>Controller extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-<?php for ($z=0; $z < $fields[0]['nrows']; $z++) { 
-        if($fields[$z]['Field']=='id') continue;
-        $required = "";
-        $type_vals = explode('(', $fields[$z]['Type']);
-        if(isset($type_vals[1])) $type_vals[1] = rtrim($type_vals[1],')');
-        else $type_vals[1] = 100;
-        if($type_vals[0] != 'int') $type_vals[0] = 'string';
-
-        
-        if($fields[$z]['Null']!='YES') $required = "required|";
-        ?>
-            '<?php echo $fields[$z]['Field']; ?>' => '<?php echo $required; ?><?php echo $type_vals[0]; ?>|max:<?php echo $type_vals[1] ?>',
+<?php for ($z=0; $z < $row[0]['nrows']; $z++) { ?>
+            '<?php echo $row[$z]['field']; ?>' => '<?php echo $row[$z]['required']=='required'?'required':'nullable'; ?>|<?php echo $row[$z]['type']; ?><?php echo $row[$z]['size']?'|max:'.$row[$z]['size']:''; ?>',
 <?php } ?>
         ]);
 
@@ -75,8 +65,18 @@ class <?php echo $class; ?>Controller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, <?php echo $class; ?> $<?php echo $table; ?>)
+    public function edit(Request $request, $id)
     {
+        $<?php echo $table; ?> = <?php echo $class; ?>::find($id);
+        if (!$<?php echo $table; ?>) {
+            return redirect('admin/<?php echo $table; ?>')->with('alert-type', 'error')->with('message', '<?php echo $module; ?> id does not exist.!');
+        }
+        return $this->view("edit", ['row' => $<?php echo $table; ?>]);
+    }
+
+    public function show(<?php echo $class; ?> $<?php echo $table; ?>)
+    {
+        dd($<?php echo $table; ?>);
         return $this->view("edit", ['row' => $<?php echo $table; ?>]);
     }
 
@@ -90,18 +90,8 @@ class <?php echo $class; ?>Controller extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-<?php for ($z=0; $z < $fields[0]['nrows']; $z++) {
-        if($fields[$z]['Field']=='id') continue;
-        $required = "";
-        $type_vals = explode('(', $fields[$z]['Type']);
-        if(isset($type_vals[1])) $type_vals[1] = rtrim($type_vals[1],')');
-        else $type_vals[1] = 100;
-        if($type_vals[0] != 'int') $type_vals[0] = 'string';
-
-        
-        if($fields[$z]['Null']!='YES') $required = "required|";
-        ?>
-            '<?php echo $fields[$z]['Field']; ?>' => '<?php echo $required; ?><?php echo $type_vals[0]; ?>|max:<?php echo $type_vals[1] ?>',
+<?php for ($z=0; $z < $row[0]['nrows']; $z++) { ?>
+            '<?php echo $row[$z]['field']; ?>' => '<?php echo $row[$z]['required']=='required'?'required':'nullable'; ?>|<?php echo $row[$z]['type']; ?><?php echo $row[$z]['size']?'|max:'.$row[$z]['size']:''; ?>',
 <?php } ?>
         ]);
 
@@ -122,8 +112,17 @@ class <?php echo $class; ?>Controller extends Controller
      */
     public function destroy($id)
     {
+        $response = array();
+        if ($id == '') {
+            $response['status'] = 'ERROR';
+            $response['msg'] = 'There was an error deleting <?php echo ucfirst($module); ?>!';
+            return json_encode($response);
+        }
+
         $<?php echo $table; ?> = <?php echo $class; ?>::find($id);
         $<?php echo $table; ?>->delete();
-        return redirect('admin/<?php echo $table; ?>')->with('message', '<?php echo ucfirst($module); ?> has been deleted.');
+        $response['status'] = 'OK';
+        $response['msg'] = '<?php echo ucfirst($module); ?> has been deleted successfully!';
+        return json_encode($response);
     }
 }
