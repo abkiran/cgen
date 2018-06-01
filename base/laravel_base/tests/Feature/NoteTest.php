@@ -1,16 +1,16 @@
 <?php
-use App\Models\Interest;
+use App\Models\Note;
 use Tests\TestCase;
 
-class InterestTest extends TestCase
+class NoteTest extends TestCase
 {
     public function testIndex()
     {
         $this->do_login();
-        $response = $this->get('admin/system/interest');
+        $response = $this->get('admin/note');
 
         $response->assertSuccessful();
-        $response->assertViewIs('admin.interest.index');
+        $response->assertViewIs('admin.note.index');
         $response->assertViewHas('rows');
         $response->assertViewHas('data');
         $rows = $response->original->getData()['rows'];
@@ -20,22 +20,22 @@ class InterestTest extends TestCase
     public function testCreate()
     {
         $this->do_login();
-        $response = $this->get('admin/system/interest/create');
+        $response = $this->get('admin/note/create');
 
         $response->assertSuccessful();
-        $response->assertViewIs('admin.interest.create');
+        $response->assertViewIs('admin.note.create');
     }
 
     public function testEdit()
     {
         $this->do_login();
-        $response = $this->get('admin/system/interest/4/edit');
+        $response = $this->get('admin/note/1/edit');
 
         $response->assertSuccessful();
-        $response->assertViewIs('admin.interest.edit');
+        $response->assertViewIs('admin.note.edit');
         $response->assertViewHas('row');
         $row = $response->original->getData()['row'];
         $this->assertNotNull($row);
-        $this->assertInstanceOf('App\Models\Interest', $row);
+        $this->assertInstanceOf('App\Models\Note', $row);
     }
 }

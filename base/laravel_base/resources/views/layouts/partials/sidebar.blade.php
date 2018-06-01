@@ -31,6 +31,43 @@
                 @endforeach
               </ul>
             </li>
+            <li class="{{$route=='volunteer'?"active":''}}"><a href="/admin/volunteer"><i class="fa fa-user"></i><span>Volunteers</span></a></li>
+            <li class="treeview {{$route=='volunteer_opportunity'?'menu-open':''}}">
+              <a href="#">
+                <i class="fa fa-table"></i> <span>Volunteer opportunities</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                    <li><a href="{{url('/admin/volunteer_opportunity')}}"><i class="fa fa-circle-o"></i>List</a></li>
+                    <li><a href="{{url('/admin/volunteer_opportunity/create')}}"><i class="fa fa-circle-o"></i>Create</a></li>
+              </ul>
+            </li>
+            <!-- <li class="treeview {{$route=='instagreeter'?'menu-open':''}}">
+              <a href="#">
+                <i class="fa fa-table"></i> <span>Instagreeters</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                    <li><a href="{{url('/admin/instagreeter')}}"><i class="fa fa-circle-o"></i>List</a></li>
+                    <li><a href="{{url('/admin/instagreeter/create')}}"><i class="fa fa-circle-o"></i>Create</a></li>
+              </ul>
+            </li> -->
+           <!--  <li class="treeview {{$route=='volunteer'?'menu-open':''}}">
+              <a href="#">
+                <i class="fa fa-table"></i> <span>Volunteers</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+               <ul class="treeview-menu" style="{{$route=='volunteer'?"display:block":''}}">
+                    <li><a href="{{url('/admin/volunteer')}}"><i class="fa fa-circle-o"></i>All Volunteers</a></li>
+                    <li><a href="{{url('/admin/volunteer/create')}}"><i class="fa fa-circle-o"></i>Create Volunteer</a></li>
+              </ul>
+            </li> -->
             <!-- <li><a href="/admin/volunteer"><i class="fa fa-dashboard"></i><span>Volunteers</span></a></li> -->
         </ul>
     </section>

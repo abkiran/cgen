@@ -18,7 +18,7 @@
                 <div class="box-header">
                     <h3 class="box-title"></h3>
                     <div class="col-md-6">
-                        <a href="{{action('UserController@create')}}" class="btn btn-info btn-sm m-5">Create User</a>
+                        <a href="{{action('UserController@create')}}" class="btn btn-primary btn-sm m-5">Create User</a>
                     </div>
 
                     <div class="col-md-6">
@@ -60,7 +60,7 @@
                             <td colspan="2"><?php echo $row['user']; ?></td>
                             <td>{{ $row->userGroup->name??'Unknown'}}</td>
                             <td><span class="label label-{{$row->status=='Active'?'success':'danger'}}">{{$row->status}}</span></td>
-                            <td><a href="{{action('UserController@edit', $row->id)}}" class="btn btn-info btn-xs pull-left m-r-5">Edit</a>
+                            <td><a href="{{action('UserController@edit', $row->id)}}" class="btn btn-primary btn-xs pull-left m-r-5">Edit</a>
                                 <form action="{{action('UserController@destroy', $row->id)}}" method="post">
                                     @csrf
                                     <input name="_method" type="hidden" value="DELETE">

@@ -7,7 +7,7 @@ class VisitTest extends TestCase
     public function testIndex()
     {
         $this->do_login();
-        $response = $this->get('admin/system/visit');
+        $response = $this->get('admin/visit');
 
         $response->assertSuccessful();
         $response->assertViewIs('admin.visit.index');
@@ -20,7 +20,7 @@ class VisitTest extends TestCase
     public function testCreate()
     {
         $this->do_login();
-        $response = $this->get('admin/system/visit/create');
+        $response = $this->get('admin/visit/create');
 
         $response->assertSuccessful();
         $response->assertViewIs('admin.visit.create');
@@ -29,7 +29,7 @@ class VisitTest extends TestCase
     public function testEdit()
     {
         $this->do_login();
-        $response = $this->get('admin/system/visit/1/edit');
+        $response = $this->get('admin/visit/1/edit');
 
         $response->assertSuccessful();
         $response->assertViewIs('admin.visit.edit');

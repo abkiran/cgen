@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SystemSetting;
+use App\Models\Setting;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -21,7 +21,7 @@ class Controller extends BaseController
     public function __construct()
     {
         // To fetch and save settings in to SETTINGS array
-        $settings = SystemSetting::select("key", "value")
+        $settings = Setting::select("key", "value")
             ->get();
         foreach ($settings as $setting) {
             $this->SETTINGS[$setting->key] = $setting->value;

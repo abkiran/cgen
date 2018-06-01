@@ -29,7 +29,7 @@ class UserTest extends TestCase
     public function testEdit()
     {
         $this->do_login();
-        $response = $this->get('admin/system/user/1/edit');
+        $response = $this->get('admin/system/user/25/edit');
 
         $response->assertSuccessful();
         $response->assertViewIs('admin.user.edit');

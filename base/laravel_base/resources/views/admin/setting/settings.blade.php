@@ -14,7 +14,7 @@
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
-            <div class="box box-info">
+            <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Modify System Settings</h3>
                 </div>
@@ -35,7 +35,7 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <button type="submit" class="btn btn-info pull-right">Save</button>
+                        <button type="submit" class="btn btn-primary pull-right">Save</button>
                     </div>
                     <!-- /.box-footer -->
                 </form>

@@ -18,7 +18,7 @@
                 <div class="box-header">
                     <h3 class="box-title"></h3>
                     <div class="col-md-6">
-                        <a href="{{action('SystemSettingController@create')}}" class="btn btn-info btn-sm m-5">Create System Setting</a>
+                        <a href="{{action('SystemSettingController@create')}}" class="btn btn-primary btn-sm m-5">Create System Setting</a>
                     </div>
 
                     <div class="col-md-6">
@@ -64,7 +64,7 @@
                         <td><?php echo $row['value']; ?></td>
                         <td><?php echo $row['widget']; ?></td>
                         <td><?php echo $row['widget_description']; ?></td>
-                            <td><a href="{{action('SystemSettingController@edit', $row->id)}}" class="btn btn-info btn-xs pull-left m-r-5">Edit</a>
+                            <td><a href="{{action('SystemSettingController@edit', $row->id)}}" class="btn btn-primary btn-xs pull-left m-r-5">Edit</a>
                                 <form action="{{action('SystemSettingController@destroy', $row->id)}}" method="post">
                                     @csrf
                                     <input name="_method" type="hidden" value="DELETE">

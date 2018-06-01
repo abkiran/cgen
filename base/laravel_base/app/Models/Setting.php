@@ -3,14 +3,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SystemSetting extends Model
+class Setting extends Model
 {
     /**
      * table name
      *
      * @var string
      */
-    public $table = 'system_setting';
+    public $table = 'setting';
 
     /**
      * timestamps disabled

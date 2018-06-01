@@ -14,15 +14,15 @@
     <link rel="stylesheet" href="/chicago/css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="/chicago/css/font-awesome.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="/chicago/css/ionicons.min.css">
     <!-- Theme style -->
+    <link rel="stylesheet" href="/chicago/css/_all-skins.min.css">
+    <link rel="stylesheet" href="/chicago/plugins/select2/select2.min.css">
     <link rel="stylesheet" href="/chicago/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
     folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="/chicago/css/_all-skins.min.css">
     <link rel="stylesheet" href="/chicago/css/style.css">
     <link rel="stylesheet" href="/chicago/plugins/toaster/toastr.min.css">
+    <link rel="stylesheet" href="/chicago/plugins/pace/pace.min.css">
 
     <!-- jQuery 3 -->
     <script src="/chicago/js/jquery.min.js"></script>
@@ -44,7 +44,7 @@
 
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini fixed">
     <div class="wrapper">
     @include('layouts.partials.header')
     <!-- Left side column. contains the logo and sidebar -->
@@ -53,7 +53,7 @@
     <?php } ?>
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
+        <div class="content-wrapper" id="#content">
             @yield('content')
         </div>
         <!-- /.content-wrapper -->
@@ -62,7 +62,7 @@
             <div class="pull-right hidden-xs">
                 <b>Version</b> 1.0.0
             </div>
-            <strong>Copyright &copy; 2002-{{date('Y')}} <a href="https://www.chicagogreeter.com/">Chicagogreeter</a>.</strong>            All rights reserved.
+            <strong>Copyright &copy; 2002-{{date('Y')}} <a href="https://www.chicagogreeter.com/">Chicagogreeter</a>.</strong>All rights reserved.
         </footer>
     </div>
     <!-- ./wrapper -->
@@ -76,6 +76,9 @@
     <script src="/chicago/js/adminlte.min.js"></script>
 
     <script src="/chicago/plugins/toaster/toastr.min.js"></script>
+    <script src="/chicago/js/base.js"></script>
+    <!-- PACE -->
+    <script src="/chicago/plugins/pace/pace.min.js"></script>
 
     <!-- Material Design -->
    <!--  <script src="/chicago/js/material.min.js"></script>

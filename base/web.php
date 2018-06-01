@@ -19,8 +19,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::resource('admin/system/user', 'UserController');
 
-    Route::get('admin/setting', 'SystemSettingController@settingsEdit');
-    Route::post('admin/setting', 'SystemSettingController@settingsUpdate');
+    Route::get('admin/setting', 'SettingController@settingsEdit');
+    Route::post('admin/setting', 'SettingController@settingsUpdate');
 
     // Crud
 <?php for ($m=0; $m < $TABLES[0]['nrows']; $m++) { ?>

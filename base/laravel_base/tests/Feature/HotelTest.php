@@ -4,6 +4,7 @@ use Tests\TestCase;
 
 class HotelTest extends TestCase
 {
+    public $id;
     public function testIndex()
     {
         $this->do_login();
@@ -14,6 +15,7 @@ class HotelTest extends TestCase
         $response->assertViewHas('rows');
         $response->assertViewHas('data');
         $rows = $response->original->getData()['rows'];
+        $this->id = $rows[0]->id;
         $this->assertInstanceOf('Illuminate\Pagination\LengthAwarePaginator', $rows);
     }
 
@@ -29,8 +31,7 @@ class HotelTest extends TestCase
     public function testEdit()
     {
         $this->do_login();
-        $response = $this->get('admin/system/hotel/1/edit');
-
+        $response = $this->get('admin/system/hotel/3/edit');
         $response->assertSuccessful();
         $response->assertViewIs('admin.hotel.edit');
         $response->assertViewHas('row');

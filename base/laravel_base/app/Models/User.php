@@ -39,7 +39,7 @@ class User extends Authenticatable
         if ($order_by) {
             $data->orderby($order_by, $order_by_type);
         } else {
-            $data->orderby('id', 'asc');
+            $data->orderby('id', 'desc');
         }
         return $data->paginate(get_setting('rows_per_page'));
     }
