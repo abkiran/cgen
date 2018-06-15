@@ -52,7 +52,7 @@
                         <tr>
 <?php for ($z=0; $z < $row[0]['nrows']; $z++) {
     $f = ucwords(str_replace('_', ' ', $row[$z]['field'])); ?>
-                            <th><?php echo $f; ?><a href="{{url('admin/<?php echo $table; ?>')}}?order_by=<?php echo $row[$z]['field']; ?>&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $row[$z]['field']; ?>'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $row[$z]['field']; ?>'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
+                            <th><?php echo $f; ?><a href="{{url('admin/<?php echo $table; ?>')}}?field={{$data['field']}}&search={{$data['search']}}&order_by=<?php echo $row[$z]['field']; ?>&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $row[$z]['field']; ?>'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='<?php echo $row[$z]['field']; ?>'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
 <?php } ?>
                             <th>Actions</th>
                         </tr>

@@ -40,11 +40,13 @@
 if ($row[$z]['input']=='textarea') { ?>
                         {!! make_input_textarea($errors, "<?php echo $f; ?>", "<?php echo $row[$z]['field']; ?>", $row-><?php echo $row[$z]['field']; ?>, <?php echo $custom; ?>) !!} 
 <?php }elseif ($row[$z]['input']=='select') { ?>
-                        {!! make_input_select($errors, "<?php echo $f; ?>", "<?php echo $row[$z]['field']; ?>", array(""), $row-><?php echo $row[$z]['field']; ?>, <?php echo $custom; ?>) !!} 
-<?php }elseif ($row[$z]['input']=='tinyint') { ?>
+                        {!! make_input_select($errors, "<?php echo $f; ?>", "<?php echo $row[$z]['field']; ?>", array(<?php foreach($row[$z]['enum_vals'] as $option) {
+                            echo "'".$option."' => '".$option."', ";
+                        } ?>), $row-><?php echo $row[$z]['field']; ?>, <?php echo $custom; ?>) !!} 
+<?php }elseif ($row[$z]['input']=='radio') { ?>
                         {!! make_input_radio($errors, "<?php echo $f; ?>", "<?php echo $row[$z]['field']; ?>", array(1=>'Yes',0=>'No'), $row-><?php echo $row[$z]['field']; ?>, <?php echo $custom; ?>) !!}
-<?php }elseif ($row[$z]['input']=='text') { ?>
-                        {!! make_input_text($errors, "<?php echo $f; ?>", 'text', "<?php echo $row[$z]['field']; ?>", $row-><?php echo $row[$z]['field']; ?>, <?php echo $custom; ?>) !!} 
+<?php }else { ?>
+                        {!! make_input_text($errors, "<?php echo $f; ?>", '<?php echo $row[$z]['input']; ?>', "<?php echo $row[$z]['field']; ?>", $row-><?php echo $row[$z]['field']; ?>, <?php echo $custom; ?>) !!} 
 <?php } }?>
                     </div>
                     <!-- /.box-body -->

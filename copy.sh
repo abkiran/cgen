@@ -10,6 +10,6 @@
 # php copy.php email_cron
 # php copy.php system_setting
 # php copy.php volunteer
-# php copy.php visit
+php copy.php visit
 # php copy.php instagreeter
-php copy.php note
+# php copy.php note

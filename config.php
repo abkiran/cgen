@@ -1,6 +1,7 @@
 <?php
 
-$MODE = isset($argv[1])?$argv[1]:'local';
+// $MODE = isset($argv[1])?$argv[1]:'local';
+$MODE = 'local';
 if ($MODE == 'local') {
     define('LOGFILE', '/var/log/apps/sidp.log');
     define('BASEDIR', '/var/www/REPO/chi/');

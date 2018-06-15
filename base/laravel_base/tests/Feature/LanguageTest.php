@@ -1,12 +1,19 @@
 <?php
+namespace Tests\Feature;
+
 use App\Models\Language;
 use Tests\TestCase;
 
 class LanguageTest extends TestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->doLogin();
+    }
+
     public function testIndex()
     {
-        $this->do_login();
         $response = $this->get('admin/system/language');
 
         $response->assertSuccessful();
@@ -15,11 +22,14 @@ class LanguageTest extends TestCase
         $response->assertViewHas('data');
         $rows = $response->original->getData()['rows'];
         $this->assertInstanceOf('Illuminate\Pagination\LengthAwarePaginator', $rows);
+        $response = $this->get('admin/system/language?field=language&search=kiran');
+        $response->assertSuccessful();
+        $response = $this->get('admin/system/language?order_by=language&order_by_type=ASC');
+        $response->assertSuccessful();
     }
 
     public function testCreate()
     {
-        $this->do_login();
         $response = $this->get('admin/system/language/create');
 
         $response->assertSuccessful();
@@ -28,7 +38,6 @@ class LanguageTest extends TestCase
 
     public function testEdit()
     {
-        $this->do_login();
         $response = $this->get('admin/system/language/1/edit');
 
         $response->assertSuccessful();
@@ -37,5 +46,11 @@ class LanguageTest extends TestCase
         $row = $response->original->getData()['row'];
         $this->assertNotNull($row);
         $this->assertInstanceOf('App\Models\Language', $row);
+    }
+
+    public function testDestroy()
+    {
+        $response = $this->call('DELETE', 'admin/system/language/21', ['_token' => csrf_token()]);
+        $this->assertEquals(302, $response->getStatusCode());
     }
 }
