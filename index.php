@@ -150,9 +150,11 @@
             $add=$file_path."resources/views/admin/$table/create.blade.php";
             $edit=$file_path."resources/views/admin/$table/edit.blade.php";
             $test=$file_path."tests/Feature/".$class."Test.php";
-            $btest=$file_path."tests/browser/".$class."Test.php";
+            $btest=$file_path."tests/Feature/browser/".$class."Test.php";
             $web=$file_path."routes/web.php";
             $sidebar=$file_path."resources/views/layouts/partials/sidebar.blade.php";
+            $hc=$file_path."app/Http/Controllers/HomeController.php"; // HOme controller
+            $dashboard=$file_path."resources/views/admin/dashboard.blade.php";
             // $searchbar=$file_path."/search_bar.html";
 
             //Create default files
@@ -220,8 +222,13 @@
         }
         
         ob_start();
-        include(BASEDIR."base/sidebar.php");
-        file_put_contents($sidebar, ob_get_contents());
+        include(BASEDIR."base/HomeController.php");
+        file_put_contents($hc, ob_get_contents());
+        ob_get_clean();
+
+        ob_start();
+        include(BASEDIR."base/dashboard.php");
+        file_put_contents($dashboard, ob_get_contents());
         ob_get_clean();
 
         ob_start();
