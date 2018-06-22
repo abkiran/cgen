@@ -1,315 +1,242 @@
 <?php
-/**
- * CodeIgniter
- *
- * An open source application development framework for PHP
- *
- * This content is released under the MIT License (MIT)
- *
- * Copyright (c) 2014 - 2018, British Columbia Institute of Technology
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2018, British Columbia Institute of Technology (http://bcit.ca/)
- * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	https://codeigniter.com
- * @since	Version 1.0.0
- * @filesource
- */
+include 'config.php';
+include BASEDIR . 'lib/db.php';
+include BASEDIR . 'lib/utill.php';
 
-/*
- *---------------------------------------------------------------
- * APPLICATION ENVIRONMENT
- *---------------------------------------------------------------
- *
- * You can load different configurations depending on your
- * current environment. Setting the environment also influences
- * things like logging and error reporting.
- *
- * This can be set to anything, but default usage is:
- *
- *     development
- *     testing
- *     production
- *
- * NOTE: If you change these, also change the error_reporting() code below
- */
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
-
-/*
- *---------------------------------------------------------------
- * ERROR REPORTING
- *---------------------------------------------------------------
- *
- * Different environments will require different levels of error reporting.
- * By default development will show errors but testing and live will hide them.
- */
-switch (ENVIRONMENT)
-{
-	case 'development':
-		error_reporting(-1);
-		ini_set('display_errors', 1);
-	break;
-
-	case 'testing':
-	case 'production':
-		ini_set('display_errors', 0);
-		if (version_compare(PHP_VERSION, '5.3', '>='))
-		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
-		}
-		else
-		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
-		}
-	break;
-
-	default:
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'The application environment is not set correctly.';
-		exit(1); // EXIT_ERROR
+declare (ticks = 1); // PHP internal, make signal handling work
+if (!function_exists('pcntl_signal')) {
+    log_msg('ERROR', "You need to enable the pcntl extension in your php binary, see http://www.php.net/manual/en/pcntl.installation.php for more info.\n");
+    exit(1);
 }
+log_msg('INFO', "Code generator is started.");
 
-/*
- *---------------------------------------------------------------
- * SYSTEM DIRECTORY NAME
- *---------------------------------------------------------------
- *
- * This variable must contain the name of your "system" directory.
- * Set the path if it is not in the same directory as this file.
- */
-	$system_path = 'system';
+$DB = $argv[1] ?? 'ch';
+doit($DB);
 
-/*
- *---------------------------------------------------------------
- * APPLICATION DIRECTORY NAME
- *---------------------------------------------------------------
- *
- * If you want this front controller to use a different "application"
- * directory than the default one you can set its name here. The directory
- * can also be renamed or relocated anywhere on your server. If you do,
- * use an absolute (full) server path.
- * For more info please see the user guide:
- *
- * https://codeigniter.com/user_guide/general/managing_apps.html
- *
- * NO TRAILING SLASH!
- */
-	$application_folder = 'application';
+log_msg('INFO', "Code generator completed.");
 
-/*
- *---------------------------------------------------------------
- * VIEW DIRECTORY NAME
- *---------------------------------------------------------------
- *
- * If you want to move the view directory out of the application
- * directory, set the path to it here. The directory can be renamed
- * and relocated anywhere on your server. If blank, it will default
- * to the standard location inside your application directory.
- * If you do move this, use an absolute (full) server path.
- *
- * NO TRAILING SLASH!
- */
-	$view_folder = '';
+function doit($db_name)
+{
+    db_connect($db_name);
+    $ROW = array();
+    $TABLES = query("Show TABLES");
 
+    if ($TABLES[0]['nrows'] > 0) {
+        create_dir(OUTPUT_DIR, $db_name);
+    }
+    // exit;
+    exec("cp -r " . BASEDIR . "base/laravel_base/. " . OUTPUT_DIR . $db_name);
 
-/*
- * --------------------------------------------------------------------
- * DEFAULT CONTROLLER
- * --------------------------------------------------------------------
- *
- * Normally you will set your default controller in the routes.php file.
- * You can, however, force a custom routing by hard-coding a
- * specific controller class/function here. For most applications, you
- * WILL NOT set your routing here, but it's an option for those
- * special instances where you might want to override the standard
- * routing in a specific front controller that shares a common CI installation.
- *
- * IMPORTANT: If you set the routing here, NO OTHER controller will be
- * callable. In essence, this preference limits your application to ONE
- * specific controller. Leave the function name blank if you need
- * to call functions dynamically via the URI.
- *
- * Un-comment the $routing array below to use this feature
- */
-	// The directory name, relative to the "controllers" directory.  Leave blank
-	// if your controller is not in a sub-directory within the "controllers" one
-	// $routing['directory'] = '';
+    for ($i = 0; $i < $TABLES[0]['nrows']; $i++) {
 
-	// The controller class file name.  Example:  mycontroller
-	// $routing['controller'] = '';
+        $fields = query("DESCRIBE `" . $TABLES[$i]['Tables_in_' . $db_name] . "`");
+        $table_name = $TABLES[$i]['Tables_in_' . $db_name];
 
-	// The controller function you wish to be called.
-	// $routing['function']	= '';
+        // Get primary key and unique key
+        //$pk = query("SELECT column_name FROM information_schema.COLUMNS WHERE table_name = '$table_name' AND table_schema = '".$db_name."' AND column_key='PRI'");
+        //$pk = get_arg($pk[0], 'column_name');
+        // $uk = query("SELECT column_name FROM information_schema.COLUMNS WHERE table_name = '$table_name' AND table_schema = '".$db_name."' AND column_key='UNI'")->result_array()[0]['column_name'];
 
+        $table = strtolower($TABLES[$i]['Tables_in_' . $db_name]);
+        $module = str_replace('_', ' ', $TABLES[$i]['Tables_in_' . $db_name]);
+        $class = str_replace(" ", '', ucwords($module));
+        if ($table=='user'||$table=='setting') {
+            continue;
+        }
+        
+        $fn = $fv = $fvars = $frep = $row = array();
+        $k = 0;
+        for ($z = 0; $z < $fields[0]['nrows']; $z++) {
+            $required = "";
+            $input = "text";
+            $css_class = "";
+            $fill = "Test";
 
-/*
- * -------------------------------------------------------------------
- *  CUSTOM CONFIG VALUES
- * -------------------------------------------------------------------
- *
- * The $assign_to_config array below will be passed dynamically to the
- * config class when initialized. This allows you to set custom config
- * items or override any default config values found in the config.php file.
- * This can be handy as it permits you to share one application between
- * multiple front controller files, with each file containing different
- * config values.
- *
- * Un-comment the $assign_to_config array below to use this feature
- */
-	// $assign_to_config['name_of_config_item'] = 'value of config item';
+            if ($fields[$z]['Field'] == 'created_at' || $fields[$z]['Field'] == 'modified_at' || $fields[$z]['Field'] == 'updated_on') {
+                continue;
+            }
+            if ($fields[$z]['Field'] == 'id') {
+                continue;
+            }
 
+            $row[$k]['field'] = $fields[$z]['Field'];
+            $row[$k]['label'] = ucwords(str_replace('_', ' ', $fields[$z]['Field']));
 
+            $type_vals = explode('(', $fields[$z]['Type']);
+            if (isset($type_vals[1])) {
+                $type_vals[1] = rtrim($type_vals[1], ')');
+            } else {
+                $type_vals[1] = 100;
+            }
 
-// --------------------------------------------------------------------
-// END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
-// --------------------------------------------------------------------
+            if ($type_vals[0] == 'enum') {
+                $row[$k]['enum'] = 1;
+                $row[$k]['enum_vals'] = explode(',', str_replace("'", "", $type_vals[1]));
+                $type_vals[1] = 50;
+                $input = 'select';
+                $fill = $row[$k]['enum_vals'][0];
+            } elseif ($type_vals[0] == 'text') {
+                $type_vals[1] = '';
+                $input = 'textarea';
+                $fill = "Lorem Ipsum";
+            } elseif ($type_vals[0] == 'tinyint') {
+                $input = "radio";
+                $fill = "1";
+            } elseif ($type_vals[0] == 'date') {
+                $css_class = 'datepicker';
+                $fill = "2018-03-10";
+            } elseif ($type_vals[0] == 'datetime') {
+                $css_class = 'datetimepicker';
+                $fill = "2018-03-10 10:43:21";
+            } else {
+                $row[$k]['enum'] = 0;
+            }
 
-/*
- * ---------------------------------------------------------------
- *  Resolve the system path for increased reliability
- * ---------------------------------------------------------------
- */
+            if (strrpos($fields[$z]['Field'], 'email') !== false) {
+                $input = 'email';
+                $fill = "example@example.com";
+            } elseif ($fields[$z]['Field'] == 'password') {
+                $input = 'password';
+                $fill = "test123";
+            }
+            if ($type_vals[0] != 'int') {
+                $type_vals[0] = 'string';
+            }
 
-	// Set the current directory correctly for CLI requests
-	if (defined('STDIN'))
-	{
-		chdir(dirname(__FILE__));
-	}
+            $row[$k]['type'] = $type_vals[0];
+            $row[$k]['size'] = $type_vals[1];
+            $row[$k]['input'] = $input;
+            $row[$k]['css_class'] = $css_class;
+            $row[$k]['fill'] = $fill;
 
-	if (($_temp = realpath($system_path)) !== FALSE)
-	{
-		$system_path = $_temp.DIRECTORY_SEPARATOR;
-	}
-	else
-	{
-		// Ensure there's a trailing slash
-		$system_path = strtr(
-			rtrim($system_path, '/\\'),
-			'/\\',
-			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-		).DIRECTORY_SEPARATOR;
-	}
+            if ($fields[$z]['Null'] != 'YES') {
+                $required = "required";
+            }
+            $row[$k]['required'] = $required;
+            $row[$k]['extra'] = $fields[$z]['Extra'];
+            array_push($fn, $fields[$z]['Field']);
+            array_push($fvars, "$" . $fields[$z]['Field']);
+            array_push($frep, $fields[$z]['Field'] . "='$" . $fields[$z]['Field'] . "'");
+            $k++;
+            $row[0]['nrows'] = $k;
+        }
+        // print_arr($row);
+        // exit;
 
-	// Is the system path correct?
-	if ( ! is_dir($system_path))
-	{
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'Your system folder path does not appear to be set correctly. Please open the following file and correct this: '.pathinfo(__FILE__, PATHINFO_BASENAME);
-		exit(3); // EXIT_CONFIG
-	}
+        $field_names = implode(',', $fn);
+        $field_names_s = sprintf("'%s'", implode("', '", $fn));
+        $field_vars = implode(',', $fvars);
+        $field_vars1 = sprintf("'%s'", implode("', '", $fvars));
+        $field_rep = implode(',', $frep);
 
-/*
- * -------------------------------------------------------------------
- *  Now that we know the path, set the main path constants
- * -------------------------------------------------------------------
- */
-	// The name of THIS file
-	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
+        $privatekey = "";
+        $file_path = OUTPUT_DIR . $db_name . '/';
 
-	// Path to the system directory
-	define('BASEPATH', $system_path);
+        //Create directories
+        create_dir($file_path . "resources/views/admin", $table);
 
-	// Path to the front controller (this file) directory
-	define('FCPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
+        $controller = $file_path . "app/Http/Controllers/" . $class . "Controller.php";
+        $model = $file_path . "app/Models/" . $class . ".php";
+        $index = $file_path . "resources/views/admin/$table/index.blade.php";
+        $add = $file_path . "resources/views/admin/$table/create.blade.php";
+        $edit = $file_path . "resources/views/admin/$table/edit.blade.php";
+        $test = $file_path . "tests/Feature/" . $class . "Test.php";
+        $btest = $file_path . "tests/Feature/browser/" . $class . "Test.php";
+        $web = $file_path . "routes/web.php";
+        $sidebar = $file_path . "resources/views/layouts/partials/sidebar.blade.php";
+        $hc = $file_path . "app/Http/Controllers/HomeController.php"; // HOme controller
+        $dashboard = $file_path . "resources/views/admin/dashboard.blade.php";
+        // $searchbar=$file_path."/search_bar.html";
+        $env = $file_path.'.env';
 
-	// Name of the "system" directory
-	define('SYSDIR', basename(BASEPATH));
+        //Create default files
+        $file = fopen($controller, "w+");
+        fwrite($file, $privatekey);
+        fclose($file);
+        $file = fopen($model, "w+");
+        fwrite($file, $privatekey);
+        fclose($file);
+        $file = fopen($index, "w+");
+        fwrite($file, $privatekey);
+        fclose($file);
+        $file = fopen($edit, "w+");
+        fwrite($file, $privatekey);
+        fclose($file);
+        $file = fopen($add, "w+");
+        fwrite($file, $privatekey);
+        fclose($file);
+        $file = fopen($test, "w+");
+        fwrite($file, $privatekey);
+        fclose($file);
+        $file = fopen($web, "w+");
+        fwrite($file, $privatekey);
+        fclose($file);
 
-	// The path to the "application" directory
-	if (is_dir($application_folder))
-	{
-		if (($_temp = realpath($application_folder)) !== FALSE)
-		{
-			$application_folder = $_temp;
-		}
-		else
-		{
-			$application_folder = strtr(
-				rtrim($application_folder, '/\\'),
-				'/\\',
-				DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-			);
-		}
-	}
-	elseif (is_dir(BASEPATH.$application_folder.DIRECTORY_SEPARATOR))
-	{
-		$application_folder = BASEPATH.strtr(
-			trim($application_folder, '/\\'),
-			'/\\',
-			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-		);
-	}
-	else
-	{
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'Your application folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
-		exit(3); // EXIT_CONFIG
-	}
+        chmod(OUTPUT_DIR, 0777);
 
-	define('APPPATH', $application_folder.DIRECTORY_SEPARATOR);
+        ob_start();
+        include BASEDIR . "base/controller.php";
+        file_put_contents($controller, ob_get_contents());
+        ob_get_clean();
 
-	// The path to the "views" directory
-	if ( ! isset($view_folder[0]) && is_dir(APPPATH.'views'.DIRECTORY_SEPARATOR))
-	{
-		$view_folder = APPPATH.'views';
-	}
-	elseif (is_dir($view_folder))
-	{
-		if (($_temp = realpath($view_folder)) !== FALSE)
-		{
-			$view_folder = $_temp;
-		}
-		else
-		{
-			$view_folder = strtr(
-				rtrim($view_folder, '/\\'),
-				'/\\',
-				DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-			);
-		}
-	}
-	elseif (is_dir(APPPATH.$view_folder.DIRECTORY_SEPARATOR))
-	{
-		$view_folder = APPPATH.strtr(
-			trim($view_folder, '/\\'),
-			'/\\',
-			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
-		);
-	}
-	else
-	{
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'Your view folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
-		exit(3); // EXIT_CONFIG
-	}
+        ob_start();
+        include BASEDIR . "base/model.php";
+        file_put_contents($model, ob_get_contents());
+        ob_get_clean();
 
-	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
+        ob_start();
+        include BASEDIR . "base/test.php";
+        file_put_contents($test, ob_get_contents());
+        ob_get_clean();
 
-/*
- * --------------------------------------------------------------------
- * LOAD THE BOOTSTRAP FILE
- * --------------------------------------------------------------------
- *
- * And away we go...
- */
-require_once BASEPATH.'core/CodeIgniter.php';
+        ob_start();
+        include BASEDIR . "base/test_browser.php";
+        file_put_contents($btest, ob_get_contents());
+        ob_get_clean();
+
+        //print_arr($fields);
+        ob_start();
+        include BASEDIR . "base/index.php";
+        file_put_contents($index, ob_get_contents());
+        ob_get_clean();
+
+        ob_start();
+        include BASEDIR . "base/edit.php";
+        file_put_contents($edit, ob_get_contents());
+        ob_get_clean();
+
+        ob_start();
+        include BASEDIR . "base/create.php";
+        file_put_contents($add, ob_get_contents());
+        ob_get_clean();
+
+    }
+
+    ob_start();
+    include BASEDIR . "base/HomeController.php";
+    file_put_contents($hc, ob_get_contents());
+    ob_get_clean();
+
+    ob_start();
+    include BASEDIR . "base/dashboard.php";
+    file_put_contents($dashboard, ob_get_contents());
+    ob_get_clean();
+
+    ob_start();
+    include BASEDIR . "base/sidebar.php";
+    file_put_contents($sidebar, ob_get_contents());
+    ob_get_clean();
+
+    ob_start();
+    include BASEDIR . "base/web.php";
+    file_put_contents($web, ob_get_contents());
+    ob_get_clean();
+
+    $file_contents = file_get_contents($env);
+    $file_contents = str_replace("<APPTITLE>", ucwords(str_replace('_', ' ', $db_name)), $file_contents);
+    $file_contents = str_replace("<DBNAME>", $db_name, $file_contents);
+    file_put_contents($env, $file_contents);
+
+    echo "<a href='" . OUTPUT_URL . $db_name . "/public'> Launch $db_name </a>";
+    exit;
+}
