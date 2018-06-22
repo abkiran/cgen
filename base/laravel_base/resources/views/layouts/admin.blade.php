@@ -21,6 +21,8 @@
     <!-- AdminLTE Skins. Choose a skin from the css/skins
     folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="/chicago/css/style.css">
+    <link rel="stylesheet" href="/chicago/css/sweetalert.css">
+    <link rel="stylesheet" href="/chicago/css/animate.min.css">
     <link rel="stylesheet" href="/chicago/plugins/toaster/toastr.min.css">
     <link rel="stylesheet" href="/chicago/plugins/pace/pace.min.css">
 
@@ -38,9 +40,8 @@
     <!-- <link rel="stylesheet" href="/chicago/css/bootstrap-material-design.min.css"> -->
     <!-- <link rel="stylesheet" href="/chicago/css/ripples.min.css">
     <link rel="stylesheet" href="/chicago/css/MaterialAdminLTE.min.css"> -->
-
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css?family=Lato|Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 
 </head>
 
@@ -62,7 +63,7 @@
             <div class="pull-right hidden-xs">
                 <b>Version</b> 1.0.0
             </div>
-            <strong>Copyright &copy; 2002-{{date('Y')}} <a href="https://www.chicagogreeter.com/">Chicagogreeter</a>.</strong>All rights reserved.
+            <strong>Copyright &copy; 2002-{{date('Y')}} <a href="https://www.chicagogreeter.com/">Chicago Greeter</a>. </strong>All rights reserved.
         </footer>
     </div>
     <!-- ./wrapper -->
@@ -79,6 +80,8 @@
     <script src="/chicago/js/base.js"></script>
     <!-- PACE -->
     <script src="/chicago/plugins/pace/pace.min.js"></script>
+
+    <script src="/chicago/js/sweetalert.min.js"></script>
 
     <!-- Material Design -->
    <!--  <script src="/chicago/js/material.min.js"></script>

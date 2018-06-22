@@ -30,6 +30,10 @@ class Controller extends BaseController
         // To set the title
         $route = \Request::route()->getName();
         $title = "";
+        if ($route=='') {
+            $uri = explode("/", \Route::current()->uri);
+            $route = end($uri);
+        }
         if ($route) {
             $route = explode('.', $route);
             $title = ucwords(str_replace('_', ' ', $route[0])) . 's';

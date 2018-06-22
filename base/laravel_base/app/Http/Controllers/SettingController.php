@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
-class SystemSettingController extends Controller
+class SettingController extends Controller
 {
     public $viewDir = "admin.setting";
 
@@ -16,7 +16,7 @@ class SystemSettingController extends Controller
         $search = $request->search;
         $field = $request->field;
 
-        $system_setting = new SystemSetting();
+        $system_setting = new Setting();
         $rows = $system_setting::all();
 
         return $this->view("settings", ['rows' => $rows]);
@@ -32,7 +32,7 @@ class SystemSettingController extends Controller
 
                 $id = explode('_', $key);
                 $id = $id[1];
-                $system_setting = SystemSetting::find($id);
+                $system_setting = Setting::find($id);
                 $system_setting->value = $value;
                 $system_setting->save();
             }

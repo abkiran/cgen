@@ -6,7 +6,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('admin/system/system_setting')}}">System Settings</a></li>
+        <li><a href="{{url('admin/setting')}}">System Settings</a></li>
         <li class="active">Modify</li>
     </ol>
 </section>
@@ -20,7 +20,7 @@
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form class="form-horizontal" action="{{action('SystemSettingController@update', $row->id)}}" method="POST">
+                <form class="form-horizontal" action="{{action('SettingController@update', $row->id)}}" method="POST">
                     <div class="box-body">
                         @csrf
                         <input name="_method" type="hidden" value="PATCH">
@@ -33,7 +33,7 @@
                     <!-- /.box-body -->
                     <div class="box-footer">
                         <button type="submit" class="btn btn-primary pull-right">Save</button>
-                        <a href="{{url('admin/system/system_setting')}}">
+                        <a href="{{url('admin/setting')}}">
                             <button type="button" class="btn btn-default pull-left">Cancel</button>
                         </a>
                     </div>

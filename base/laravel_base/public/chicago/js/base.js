@@ -11,18 +11,24 @@ $(document).ready(function(){
 
 function initScripts() {
     // To show pace loader
-    $(document).ajaxStart(function() { Pace.restart(); });
-    
-    // To load ajax content in specific div
-    $(".quick-ajax").each(function () {
-        $(this).load($(this).attr('data-url'));
-    });
+    $(document).ajaxStart(function() { Pace.restart(); });   
 
     // For Laravel
-	$.ajaxSetup({ 
+    $.ajaxSetup({ 
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')} 
     });
+
+    $('.box-header input[name=search]').keypress(function(e){
+        if(e.which == 13){//Enter key pressed
+            $('.search').click();//Trigger search button click event
+        }
+    });
+    
 }
+// To load ajax content in specific div
+$(".quick-ajax").each(function () {
+    $(this).load($(this).attr('data-url'));
+});
 
 function loadPage(url, container, async) {
 	// Is the URL sent in paramter? Else get it from the objects attribute
@@ -125,12 +131,21 @@ Upload.prototype.progressHandling = function (event) {
 };
 
 function deleteRow(obj) {
-    Pace.restart();
-    Pace.track(function () {
-        id = $(obj).attr('data-id');
-        name = $(obj).attr('data-name');
-        url = $(obj).attr('data-url');
-        if(confirm('Are you sure you want to delete '+ name +'?')) {
+    id = $(obj).attr('data-id');
+    name = $(obj).attr('data-name');
+    url = $(obj).attr('data-url');
+    const willDelete = swal({
+      title: "Are you sure?",
+      text: 'Are you sure you want to delete '+ name +'?',
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then(willDelete => {
+        if (!willDelete) {
+            return false;
+        }
+        Pace.restart();
+        Pace.track(function () {
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
@@ -147,11 +162,75 @@ function deleteRow(obj) {
                         toastr.error(response.msg);
                         return;
                     }
-                    $('.row-'+id).fadeOut("slow");
+                    $('.row-'+id).fadeOut(1500);
                     toastr.success(response.msg);
                     return;
                 } 
             });
-        }
-    });
+        })
+    })
+}
+
+function formatDate(dateObj,format)
+{
+    var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+    var curr_date = dateObj.getDate();
+    var curr_month = dateObj.getMonth();
+    curr_month = curr_month + 1;
+    var curr_year = dateObj.getFullYear();
+    var curr_min = dateObj.getMinutes();
+    var curr_hr= dateObj.getHours();
+    var curr_sc= dateObj.getSeconds();
+    if(curr_month.toString().length == 1)
+    curr_month = '0' + curr_month;      
+    if(curr_date.toString().length == 1)
+    curr_date = '0' + curr_date;
+    if(curr_hr.toString().length == 1)
+    curr_hr = '0' + curr_hr;
+    if(curr_min.toString().length == 1)
+    curr_min = '0' + curr_min;
+
+    if(format ==1)//dd-mm-yyyy
+    {
+        return curr_date + "-"+curr_month+ "-"+curr_year;       
+    }
+    else if(format ==2)//yyyy-mm-dd
+    {
+        return curr_year + "-"+curr_month+ "-"+curr_date;       
+    }
+    else if(format ==3)//dd/mm/yyyy
+    {
+        return curr_date + "/"+curr_month+ "/"+curr_year;       
+    }
+    else if(format ==4)// MM/dd/yyyy HH:mm:ss
+    {
+        return curr_month+"/"+curr_date +"/"+curr_year+ " "+curr_hr+":"+curr_min+":"+curr_sc;
+    }
+    else if(format ==5)//yyyy-mm-dd
+    {
+        return curr_year + "-"+curr_month+ "-"+curr_date+ " "+curr_hr+":"+curr_min+":"+curr_sc;
+    }
+    else if(format ==6)//yyyy-mm-dd
+    {
+        return curr_hr+":"+curr_min+":"+curr_sc;
+    }
+}
+
+function compareTime(str1, str2){
+    if(str1 === str2){
+        return 1;
+    }
+    var time1 = str1.split(':');
+    var time2 = str2.split(':');
+    if(eval(time1[0]) > eval(time2[0])){
+        return -1;
+    } else if(eval(time1[0]) == eval(time2[0]) && eval(time1[1]) > eval(time2[1])) {
+        return -1;
+    } else {
+        return 1;
+    }
+}
+
+function c(msg) {
+    console.log(msg);
 }

@@ -37,7 +37,7 @@ if ($MODE == 'local') {
     define('DB_NAME', '');
     define('DB_PREFIX', '');
     define('DB_POSTFIX', '_db');
-    
+
     define('IS_LOCAL', 0);
 }
 

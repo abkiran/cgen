@@ -1,5 +1,15 @@
 <?php
 
+define('MYSQL_DATETIME_FORMAT', 'Y-m-d H:i:s');
+define('MYSQL_DATE_FORMAT', 'Y-m-d');
+define('EMAIL_DEFAULT_FROM_NAME', 'Chicago Greeter Staff');
+define('EMAIL_DEFAULT_FROM_EMAIL_ADDRESS', 'chgogreeter@choosechicago.com');
+define('EMAIL_DEFAULT_REPLY_TO_EMAIL_ADDRESS', 'chgogreeter@choosechicago.com');
+define('VISITOR_SESSION_ID', 'chicago_greeter_visitor');
+define('VISITOR_MODEL_ID', 'chicago_greeter_model_id');
+define('PROFILER_QUERY_STRING_PARAM', 'ci_profiler');
+define('READABLE_DATETIME_FORMAT', 'F j, Y, g:i a');
+
 function make_input_text($errors, $label, $type, $name, $value = null, $attrs = array())
 {
     $class = 'form-control ';
@@ -34,10 +44,6 @@ function make_input_text($errors, $label, $type, $name, $value = null, $attrs = 
 
     $class1 = 'col-sm-3';
     $class2 = 'col-sm-6';
-    // if ($has_right_side_bar) {
-    //     $class1 = 'col-sm-3';
-    //     $class2 = 'col-sm-7';
-    // }
 
     $error_block = "";
     if ($errors->has($name)) {
@@ -317,7 +323,6 @@ function state_dropdown($selected = null)
 
     }
 
-    // return form_dropdown($name, $options, $selected, $additional);
     return $options;
 
 }
@@ -537,10 +542,7 @@ function country_dropdown($selected = null)
 
     }
 
-    // return form_dropdown($name, $options, $selected, $additional);
-
     return $options;
-
 }
 
 
@@ -626,8 +628,6 @@ EOF;
             $input
         </div>
     </div>";
-    
-    return $output;
 }
 
 function form_checkbox($attrs)
@@ -640,4 +640,45 @@ function form_checkbox($attrs)
         $attrs_html .= $key . '="' . $val . '" ';
     }
     return "<input type='checkbox' $attrs_html>";
+}
+
+function get_arg($ARR, $key)
+{
+    if (isset($ARR[$key])) {
+        return $ARR[$key];
+    }
+    return '';
+}
+
+function mdyToYmd($dateString, $time = 0)
+{
+    if (!$dateString) {
+        return '';
+    }
+    if (!$time) {
+        $parts = explode('-', $dateString);
+        return $parts[2] . '-' . $parts[0] . '-' . $parts[1];
+    }
+    $date = explode(' ', $dateString);
+    $parts = explode('-', $date[0]);
+    return $parts[2] . '-' . $parts[0] . '-' . $parts[1] . ' ' .$date[1] . ' ' . $date[2];
+}
+
+function outputDateFormat($dateString, $time = 0)
+{
+    if (!$dateString) {
+        return "";
+    }
+    try {
+        $dateTimeObject = new DateTime($dateString);
+    } catch (Exception $exc) {
+        if (!$time) {
+            return date("m-d-Y", $dateString);
+        }
+        return date("m-d-Y h:i A", $dateString);
+    }
+    if (!$time) {
+        return date("m-d-Y", strtotime($dateString));
+    }
+    return date("m-d-Y h:i A", strtotime($dateString));
 }

@@ -6,7 +6,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('admin/system/system_setting')}}">System Settings</a></li>
+        <li><a href="{{url('admin/setting')}}">System Settings</a></li>
         <li class="active">New</li>
     </ol>
 </section>
@@ -20,7 +20,7 @@
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form class="form-horizontal" action="{{url('admin/system/system_setting')}}" method="POST">
+                <form class="form-horizontal" action="{{url('admin/setting')}}" method="POST">
                     <div class="box-body">
                         @csrf
                         {!! make_input_text($errors, "Key", "text", "key") !!} 
@@ -32,7 +32,7 @@
                     <!-- /.box-body -->
                     <div class="box-footer">
                         <button type="submit" class="btn btn-primary pull-right">Save</button>
-                        <a href="{{url('admin/system/system_setting')}}">
+                        <a href="{{url('admin/setting')}}">
                             <button type="button" class="btn btn-default pull-left">Cancel</button>
                         </a>
                     </div>

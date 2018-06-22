@@ -6,7 +6,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('admin/system/system_setting')}}">System Settings</a></li>
+        <li><a href="{{url('admin/setting')}}">System Settings</a></li>
         <li class="active">List</li>
     </ol>
 </section>
@@ -18,7 +18,7 @@
                 <div class="box-header">
                     <h3 class="box-title"></h3>
                     <div class="col-md-6">
-                        <a href="{{action('SystemSettingController@create')}}" class="btn btn-primary btn-sm m-5">Create System Setting</a>
+                        <a href="{{action('SettingController@create')}}" class="btn btn-primary btn-sm m-5">Create System Setting</a>
                     </div>
 
                     <div class="col-md-6">
@@ -50,11 +50,11 @@
                 <div class="box-body table-responsive no-padding">
                     <table class="table table-hover">
                         <tr>
-                            <th>Key<a href="{{url('admin/system/system_setting')}}?order_by=key&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='key'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='key'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
-                            <th>Label<a href="{{url('admin/system/system_setting')}}?order_by=label&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='label'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='label'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
-                            <th>Value<a href="{{url('admin/system/system_setting')}}?order_by=value&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='value'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='value'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
-                            <th>Widget<a href="{{url('admin/system/system_setting')}}?order_by=widget&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='widget'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='widget'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
-                            <th>Widget Description<a href="{{url('admin/system/system_setting')}}?order_by=widget_description&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='widget_description'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='widget_description'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
+                            <th>Key<a href="{{url('admin/setting')}}?order_by=key&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='key'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='key'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
+                            <th>Label<a href="{{url('admin/setting')}}?order_by=label&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='label'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='label'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
+                            <th>Value<a href="{{url('admin/setting')}}?order_by=value&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='value'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='value'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
+                            <th>Widget<a href="{{url('admin/setting')}}?order_by=widget&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='widget'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='widget'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
+                            <th>Widget Description<a href="{{url('admin/setting')}}?order_by=widget_description&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='widget_description'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='widget_description'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
                             <th>Actions</th>
                         </tr>
                         @foreach ($rows as $row)
@@ -64,8 +64,8 @@
                         <td><?php echo $row['value']; ?></td>
                         <td><?php echo $row['widget']; ?></td>
                         <td><?php echo $row['widget_description']; ?></td>
-                            <td><a href="{{action('SystemSettingController@edit', $row->id)}}" class="btn btn-primary btn-xs pull-left m-r-5">Edit</a>
-                                <form action="{{action('SystemSettingController@destroy', $row->id)}}" method="post">
+                            <td><a href="{{action('SettingController@edit', $row->id)}}" class="btn btn-primary btn-xs pull-left m-r-5">Edit</a>
+                                <form action="{{action('SettingController@destroy', $row->id)}}" method="post">
                                     @csrf
                                     <input name="_method" type="hidden" value="DELETE">
                                     <button class="btn btn-danger btn-xs" type="submit">Delete</button>
@@ -93,7 +93,7 @@ $(document).ready(function() {
     $('.search').click(function(event) {
         search = $('input[name=search]').val();
         field = $('select[name=field]').val();
-        window.location.href = "{{url('admin/system/system_setting')}}?field="+field+"&search="+search;
+        window.location.href = "{{url('admin/setting')}}?field="+field+"&search="+search;
     });
 });
 </script>

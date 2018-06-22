@@ -6,7 +6,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('admin/system/user')}}">Users</a></li>
+        <li><a href="{{url('admin/user')}}">Users</a></li>
         <li class="active">List</li>
     </ol>
 </section>
@@ -50,9 +50,9 @@
                 <div class="box-body table-responsive no-padding">
                     <table class="table table-hover">
                         <tr>
-                            <th>User/Email<a href="{{url('admin/system/user')}}?order_by=user&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='user'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='user'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
-                            <th colspan="2">User Group<a href="{{url('admin/system/user')}}?order_by=user_group&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='user_group'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='user_group'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
-                            <th>Status<a href="{{url('admin/system/user')}}?order_by=status&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='status'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='status'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
+                            <th>User/Email<a href="{{url('admin/user')}}?order_by=user&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='user'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='user'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
+                            <th colspan="2">User Group<a href="{{url('admin/user')}}?order_by=user_group&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='user_group'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='user_group'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
+                            <th>Status<a href="{{url('admin/user')}}?order_by=status&order_by_type={{$data['order_by_type']=='ASC'&&$data['order_by']=='status'?'DESC':'ASC'}}"><i class="fa fa-sort-{{$data['order_by_type']=='ASC'&&$data['order_by']=='status'?'asc':'desc'}}" aria-hidden="true"></i></a></th>
                             <th>Actions</th>
                         </tr>
                         @foreach ($rows as $row)
@@ -89,7 +89,7 @@ $(document).ready(function() {
     $('.search').click(function(event) {
         search = $('input[name=search]').val();
         field = $('select[name=field]').val();
-        window.location.href = "{{url('admin/system/user')}}?field="+field+"&search="+search;
+        window.location.href = "{{url('admin/user')}}?field="+field+"&search="+search;
     });
 });
 </script>

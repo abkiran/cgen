@@ -2,7 +2,7 @@
     <!-- Logo -->
     <a href="/admin" class="logo">
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>Chicago</b>&nbsp;Greeter</span>
+        <span class="logo-lg"><b>{{config('app.name', 'Laravel')}}</b>&nbsp;System</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">

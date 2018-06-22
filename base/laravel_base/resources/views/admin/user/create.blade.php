@@ -5,7 +5,7 @@
         Create User    </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('admin/system/user')}}">Users</a></li>
+        <li><a href="{{url('admin/user')}}">Users</a></li>
         <li class="active">New</li>
     </ol>
 </section>
@@ -19,7 +19,7 @@
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form id="createForm" class="form-horizontal" action="{{url('admin/system/user')}}" method="POST">
+                <form id="createForm" class="form-horizontal" action="{{url('admin/user')}}" method="POST">
                     <div class="box-body">
                         @csrf
                         {!! make_input_text($errors, "Username/Email", "text", "user", "", array("required"=>"required",)) !!} 
@@ -34,7 +34,7 @@
                     <!-- /.box-body -->
                     <div class="box-footer">
                         <button type="submit" class="btn btn-primary pull-right">Save</button>
-                        <a href="{{url('admin/system/user')}}">
+                        <a href="{{url('admin/user')}}">
                             <button type="button" class="btn btn-default pull-left">Cancel</button>
                         </a>
                     </div>

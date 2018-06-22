@@ -1,4 +1,4 @@
-@extends('interface.layouts.app')
+@extends('layouts.admin')
 @section('title','Dashboard')
 @section('content')
 <section class="content-header">
@@ -16,7 +16,7 @@
 <?php $fn=array();
 for ($m=0; $m < $TABLES[0]['nrows']; $m++) {
     $table=strtolower($TABLES[$m]['Tables_in_'.$db_name]);
-    $module=str_replace('_', ' ', $TABLES[$m]['Tables_in_'.$db_name]);
+    $module=ucwords(str_replace('_', ' ', $TABLES[$m]['Tables_in_'.$db_name]));
     $class = str_replace(" ", '', ucwords($module));
     array_push($fn, $table);
 ?>

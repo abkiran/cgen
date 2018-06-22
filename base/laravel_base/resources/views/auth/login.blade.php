@@ -42,7 +42,7 @@
 <body class="hold-transition login-page" style="height:auto">
     <div class="login-box">
         <div class="login-logo">
-            <a href="../../index2.html"><b>Chicago</b> Greeter</a>
+            <a href="/"><b>{{config('app.name', 'Laravel')}}</b> System</a>
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">

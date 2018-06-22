@@ -21,7 +21,7 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
         'remember_token' => str_random(10),
-        'user_group' => $faker->shuffle('1', '2', '3'),
-        'status' => $faker->shuffle('Active', 'Disabled', 'Unverified'),
+        'user_group' => $faker->randomElement(['1', '2', '3']),
+        'status' => $faker->randomElement(['Active', 'Disabled', 'Unverified']),
     ];
 });

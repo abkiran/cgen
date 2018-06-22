@@ -27,7 +27,7 @@
               </a>
               <ul class="treeview-menu" style="{{array_key_exists($route."s", $systems)?"display:block":''}}">
                 @foreach ($systems as $key => $sys)
-                    <li class="{{$route."s"==$key?'active':''}}"><a href="{{url('/admin/system/'.rtrim($key,'s'))}}"><i class="fa fa-circle-o"></i>{{ucfirst(str_replace('_', ' ', $key))}}</a></li>
+                    <li class="{{$route."s"==$key?'active':''}}"><a href="{{url('/admin/'.rtrim($key,'s'))}}"><i class="fa fa-circle-o"></i>{{ucfirst(str_replace('_', ' ', $key))}}</a></li>
                 @endforeach
               </ul>
             </li>

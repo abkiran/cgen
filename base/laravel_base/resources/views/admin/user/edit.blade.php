@@ -5,7 +5,7 @@
         Modify User    </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('admin/system/user')}}">Users</a></li>
+        <li><a href="{{url('admin/user')}}">Users</a></li>
         <li class="active">Modify</li>
     </ol>
 </section>
@@ -35,7 +35,7 @@
                     <!-- /.box-body -->
                     <div class="box-footer">
                         <button type="submit" class="btn btn-primary pull-right">Save</button>
-                        <a href="{{url('admin/system/user')}}">
+                        <a href="{{url('admin/user')}}">
                             <button type="button" class="btn btn-default pull-left">Cancel</button>
                         </a>
                     </div>

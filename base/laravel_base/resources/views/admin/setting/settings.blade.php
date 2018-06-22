@@ -6,7 +6,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('admin/system/setting')}}">System Settings</a></li>
+        <li><a href="{{url('admin/setting')}}">System Settings</a></li>
         <li class="active">Modify</li>
     </ol>
 </section>
@@ -20,7 +20,7 @@
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form class="form-horizontal" action="{{action('SystemSettingController@settingsUpdate')}}" method="POST">
+                <form class="form-horizontal" action="{{action('SettingController@settingsUpdate')}}" method="POST">
                     <div class="box-body">
                         @csrf
                         @foreach ($rows as $row)

@@ -128,3 +128,21 @@
     padding-top: 26%;
     cursor: pointer;
 }
+.clear {
+  clear: both;
+}
+.filter {
+    margin-top: 20px;
+}
+.sidebar-menu>li>a>.fas, .sidebar-menu>li>a>.glyphicon, .sidebar-menu>li>a>.ion {
+    width: 20px !important;
+}
+.volunteer-not-approved {
+    background-color: rgb(177, 15, 76);
+}
+.volunteer-approved {
+    background-color: rgb(72, 184, 96);
+}
+.volunteer-pending {
+    background-color: rgb(255, 222, 144);
+}
