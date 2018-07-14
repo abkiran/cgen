@@ -25,7 +25,7 @@ for ($m=0; $m < $TABLES[0]['nrows']; $m++) {
 			<div class="small-box bg-aqua">
 				<div class="inner">
 					<h3>{{$<?php echo $table; ?>}}</h3>
-					<p><?php echo $module; ?></p>
+					<p><?php echo $module; ?>s</p>
 				</div>
 				<div class="icon">
 					<i class="ion ion-person-stalker"></i>
