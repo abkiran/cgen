@@ -6,6 +6,7 @@ $(document).ready(function(){
 			loadPage(state.url,undefined,false);
 		}
 	});
+    $('.slimscroll').slimscroll();
     initScripts();
 });
 
@@ -24,11 +25,17 @@ function initScripts() {
         }
     });
     
+    // To load ajax content in specific div
+    $(".quick-ajax").each(function () {
+        // Pace.restart();
+        // Pace.track(function () {
+            $(this).load($(this).attr('data-url'), function(){
+                $(this).removeClass('quick-ajax');
+            });
+        // });
+    });
+    
 }
-// To load ajax content in specific div
-$(".quick-ajax").each(function () {
-    $(this).load($(this).attr('data-url'));
-});
 
 function loadPage(url, container, async) {
 	// Is the URL sent in paramter? Else get it from the objects attribute
@@ -160,16 +167,49 @@ function deleteRow(obj) {
                     } catch {}
                     if (response.status!='OK') {
                         toastr.error(response.msg);
-                        return;
+                        return false;
                     }
                     $('.row-'+id).fadeOut(1500);
                     toastr.success(response.msg);
-                    return;
+                    return true;
                 } 
             });
         })
     })
 }
+
+function postAjax(data_url, data, callback='', exit = 0)
+{
+    $.ajax({
+         type: 'POST',
+         url: data_url,
+         data: data,
+         success: function (response) {
+            try {
+                callback();
+            } catch(e) { }
+            if (exit) {
+                return;
+            }
+
+            try {
+                response = jQuery.parseJSON(response);
+            } catch {}
+            
+            if (response.status!='OK') {
+                toastr.error(response.msg);
+                return;
+            }
+            toastr.success(response.msg);
+            $('.close').click()
+            return;
+        },
+        error: function() {
+            toastr.error("Something went wrong!!");
+        }
+    });
+}
+
 
 function formatDate(dateObj,format)
 {
@@ -234,3 +274,11 @@ function compareTime(str1, str2){
 function c(msg) {
     console.log(msg);
 }
+
+var delay = (function(){
+  var timer = 0;
+  return function(callback, ms){
+    clearTimeout (timer);
+    timer = setTimeout(callback, ms);
+  };
+})();

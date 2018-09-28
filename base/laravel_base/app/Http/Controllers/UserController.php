@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Auth;
 
 class UserController extends Controller
 {
@@ -117,8 +119,8 @@ class UserController extends Controller
             'password' => 'max:50',
             'user_group' => 'int|max:11',
             'status' => 'required|string|max:100',
-            'first_name' => 'string|max:100',
-            'last_name' => 'string|max:100',
+            'first_name' => 'nullable|max:100',
+            'last_name' => 'nullable|max:100',
         ]);
 
         $user = User::find($id);
@@ -133,7 +135,7 @@ class UserController extends Controller
         $user->last_name = $request->get('last_name');
 
         $user->save();
-        return redirect('admin/system/user')->with('message', 'User details are updated.');
+        return redirect('admin/system/user')->with('message', 'User details are updated successfully!');
     }
 
     /**
@@ -148,8 +150,31 @@ class UserController extends Controller
         return redirect('admin/system/user')->with('message', 'User has been deleted.');
     }
 
-    protected function view($view, $data = [])
+    /**
+     * To change the password.
+     *
+     * @return  \Illuminate\Http\Response
+     */
+    public function changePassword(Request $request)
     {
-        return view($this->viewDir . "." . $view, $data);
+        $this->validate($request, [
+            'old_password' => 'required|string|max:50|min:5',
+            'password' => 'required|string|max:50|min:5|confirmed',
+        ]);
+
+        $id = Auth::user()->id;
+        $hashedPassword = Auth::user()->password;
+        $old_password = $request->get('old_password');
+        $password = $request->password;
+
+        if (!Hash::check($old_password, $hashedPassword)) {
+            // The passwords not matched...
+            return back()->with('alert-type', 'error')->with('message', 'The old password that you have entered is not matching our records!');
+        }
+
+        Auth::user()->password = bcrypt($password);
+        Auth::user()->update();
+
+        return back()->with('message', 'Password has been changed successfully!');
     }
 }

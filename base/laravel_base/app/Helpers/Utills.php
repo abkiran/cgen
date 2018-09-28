@@ -142,6 +142,67 @@ function make_input_select($errors, $label, $name, $data = array(), $value = nul
             </div>";
 }
 
+function form_dropdown($name, $data = array(), $value = null, $attrs = array())
+{
+    $options = "";
+    $class = "form-control ";
+    foreach ($data as $key => $val) {
+        $selected = "";
+        if ($key == old($name, $value)) {
+            $selected = "selected";
+        }
+        $options .= "<option value='$key' $selected>$val</option>";
+    }
+
+    $attrs['name'] = $name;
+    if (!isset($attrs['id'])) {
+        $attrs['id'] = $name;
+    }
+
+    $attrs_html = '';
+    foreach ($attrs as $key => $val) {
+        $attrs_html .= $key . '="' . $val . '" ';
+        if ($key == 'class') {
+            $class .= $val;
+            continue;
+        }
+    }
+
+    return "<select class='$class' $attrs_html>
+                $options
+            </select>";
+}
+function form_input($label, $type, $name, $value = null, $attrs = array())
+{
+    $class = 'form-control ';
+    if ($type == '') {
+        $type = 'text';
+    } elseif ($type == 'checkbox') {
+        $class .= ' m-t-10';
+    }
+
+    $attrs['name'] = $name;
+    if (!isset($attrs['id'])) {
+        $attrs['id'] = $name;
+    }
+
+    $attrs_html = '';
+    $has_right_side_bar = 0;
+    foreach ($attrs as $key => $val) {
+        if ($key == 'class') {
+            $class .= $val;
+            continue;
+        } elseif ($key == 'right_side_bar') {
+            $has_right_side_bar = 1;
+            continue;
+        }
+
+        $attrs_html .= $key . '="' . $val . '" ';
+    }
+
+    return "<input type='$type' class='$class' placeholder='$label' value='" . old($name, $value) . "' $attrs_html>";
+}
+
 function make_input_select_multiple($errors, $label, $name, $data = array(), $value = null, $attrs = array())
 {
     $options = "";
@@ -650,6 +711,13 @@ function get_arg($ARR, $key)
     return '';
 }
 
+function print_arr($arr)
+{
+    echo '<pre>';
+    print_r($arr);
+    echo '</pre>';
+}
+
 function mdyToYmd($dateString, $time = 0)
 {
     if (!$dateString) {
@@ -670,7 +738,7 @@ function outputDateFormat($dateString, $time = 0)
         return "";
     }
     try {
-        $dateTimeObject = new DateTime($dateString);
+        new DateTime($dateString);
     } catch (Exception $exc) {
         if (!$time) {
             return date("m-d-Y", $dateString);
@@ -681,4 +749,36 @@ function outputDateFormat($dateString, $time = 0)
         return date("m-d-Y", strtotime($dateString));
     }
     return date("m-d-Y h:i A", strtotime($dateString));
+}
+
+function timeAgo($datetime, $full = false)
+{
+    $now = new DateTime;
+    $ago = new DateTime($datetime);
+    $diff = $now->diff($ago);
+
+    $diff->w = floor($diff->d / 7);
+    $diff->d -= $diff->w * 7;
+
+    $string = array(
+        'y' => 'year',
+        'm' => 'month',
+        'w' => 'week',
+        'd' => 'day',
+        'h' => 'hour',
+        'i' => 'minute',
+        's' => 'second',
+    );
+    foreach ($string as $k => &$v) {
+        if ($diff->$k) {
+            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+        } else {
+            unset($string[$k]);
+        }
+    }
+
+    if (!$full) {
+        $string = array_slice($string, 0, 1);
+    }
+    return $string ? implode(', ', $string) . ' ago' : 'just now';
 }

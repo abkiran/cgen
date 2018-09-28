@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
 
 abstract class BrowserKitTestCase extends BaseTestCase
@@ -20,6 +21,18 @@ abstract class BrowserKitTestCase extends BaseTestCase
         }
 
         return $uses;
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+        DB::beginTransaction();
+    }
+
+    public function tearDown()
+    {
+        DB::rollBack();
+        parent::tearDown();
     }
 
     protected function dispatch($job)

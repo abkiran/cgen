@@ -146,3 +146,188 @@
 .volunteer-pending {
     background-color: rgb(255, 222, 144);
 }
+.visit-info {
+    background: #E7EBEB;
+    padding: 5px;
+}
+
+
+/*----------------------------------------------------------------------------------------------------------------*/
+/* visit-details */
+/*----------------------------------------------------------------------------------------------------------------*/
+
+.visit-details>.box-primary {
+    padding-top: 0px;
+}
+
+.visit-details .form-group{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.visit-details h5, .visit-details span{
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: bold;
+}
+
+.visit-details span{
+    font-weight: 400;
+}
+
+.visit-details .btn{
+    margin-top: 7px;
+}
+
+.visit-filters ul li, .top-buttons ul li{
+    display: inline-block;
+}
+
+.visit-details .actions-box .btn{
+    margin-right: 3px;
+    margin-left: 3px;
+    background: rgba(70, 188, 231, 1);
+    border-color: rgba(70, 188, 231, 1);
+}
+
+span.read-more{
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+span.read-more i.hide{
+    display: none;
+}
+
+.group-info{
+    display: block;
+    width: 100%;
+    height: 100px;
+    overflow: hidden;
+}
+
+.group-info.show{
+    height: auto;       
+}
+
+
+.date-selector .btn{
+    margin-right: 3px;
+    margin-left: 3px;
+}
+
+
+
+/*----------------------------------------------------------------------------------------------------------------*/
+/* visit-filters */
+/*----------------------------------------------------------------------------------------------------------------*/
+
+.visit-filters h5{
+    font-size: 14px;
+    line-height: 1.4;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.visit-filters label{
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.lang-filter, .neighbour-filter, .interests-filter{
+    display: block;
+    width: 100%;
+    height: 120px;
+    overflow-y: scroll;
+    padding: 0px 10px;
+    border-radius: 0px 0px 3px 3px;
+    border: none;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);    
+}
+
+.filter-options .btn{
+    margin-top: 7px;
+}
+.vclosed {
+    opacity: 0.5;
+}
+.vclosed a, .vclosed button, .vclosed input {
+    pointer-events: none;
+}
+.reopen_visit {
+    pointer-events: all;
+}
+.content a.btn {
+    min-width: 70px;
+}
+
+
+/* width */
+/* width */
+.fc-scroller::-webkit-scrollbar {
+    width: 3px;
+}
+.fc-scroller5x::-webkit-scrollbar {
+    width: 5px;
+}
+.fc-scroller10x::-webkit-scrollbar {
+    width: 10px;
+}
+/* Track */
+.fc-scroller::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+/* Handle */
+.fc-scroller::-webkit-scrollbar-thumb {
+    background: #bbb; 
+}
+/* Handle on hover */
+.fc-scroller::-webkit-scrollbar-thumb:hover {
+    background: #888; 
+}
+
+.history {
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+/* Calender legends*/
+.label-v {
+    background-color: #45ADA8;
+    margin: 0px 0.5px;
+}
+.label-i {
+    background-color: #f7931d;
+    margin: 0px 0.5px;
+}
+.label-vo {
+    background-color: #9DE0AD;
+    margin: 0px 0.5px;
+}
+.label-up {
+    background-color: #999999;
+    margin: 0px 0.5px;
+    clear: both;
+}
+.fc-bgevent {
+    opacity: 0.7 !important;
+}
+.com-text{
+    white-space: pre-wrap;
+      word-wrap: break-word;
+}
+.h5 {
+    font-weight: 1000;
+    font-size: 15px;
+}
+span.invalid-feedback {
+    color: red;
+}
+.isDisabled {
+  color: currentColor;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
+  pointer-events: none;
+}

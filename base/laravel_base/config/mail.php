@@ -119,5 +119,9 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
+    'to' => [
+        'address' => 'kiran.reddy@clariontechnologies.co.in',
+        'name' => 'Kiran Reddy'
+    ],
 
 ];

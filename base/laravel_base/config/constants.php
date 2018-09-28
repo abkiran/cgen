@@ -19,7 +19,15 @@ return [
         'Disabled' => 'Disabled',
         'Unverified' => 'Unverified',
     ],
+
+    'user_groups' => [
+        1 => 'Administrators',
+        2 => 'Volunteers',
+        3 => 'visitors',
+    ],
+
     'volunteer_status' => [
+        '' => '-',
         'New'=>'New',
         'Pending'=>'Pending',
         'Interview' => 'Interview',

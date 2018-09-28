@@ -3,31 +3,26 @@
 namespace Tests;
 
 use App\Models\User;
+use Auth;
 
 trait CreatesUsers
 {
-    protected function login(array $attributes = []): User
+    protected function login(array $attributes = [])
     {
-        $user = $this->createUser($attributes);
+        // $user = $this->createUser($attributes);
 
-        $this->be($user);
+        // $this->be($user);
 
-        return $user;
+        // return $user;
+        $this->post('/login', [
+            'email' => 'katielaw',
+            'password' => '123456'
+        ]);
     }
 
     protected function loginAs(User $user)
     {
         $this->be($user);
-    }
-
-    protected function loginAsModerator(array $attributes = []): User
-    {
-        return $this->login(array_merge($attributes, ['type' => User::MODERATOR]));
-    }
-
-    protected function loginAsAdmin(array $attributes = []): User
-    {
-        return $this->login(array_merge($attributes, ['type' => User::ADMIN]));
     }
 
     protected function createUser(array $attributes = []): User
@@ -39,5 +34,10 @@ trait CreatesUsers
             'email' => 'john@example.com',
             'password' => bcrypt('password'),
         ], $attributes));
+    }
+
+    public function logout()
+    {
+        Auth::logout();
     }
 }

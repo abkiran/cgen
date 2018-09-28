@@ -14,6 +14,15 @@
 Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 
+//Shared modules
+Route::group(['middleware' => ['auth']], function () {
+    
+    // Change password
+    Route::view('system/change_password', 'common.change_password');
+    Route::post('system/change_password', 'UserController@changePassword');
+
+});
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin', 'HomeController@index')->name('home');
     Route::get('/home', 'HomeController@index')->name('home');

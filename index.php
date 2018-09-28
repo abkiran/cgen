@@ -52,7 +52,7 @@ function doit($db_name)
             $css_class = "";
             $fill = "Test";
 
-            if ($fields[$z]['Field'] == 'created_at' || $fields[$z]['Field'] == 'modified_at' || $fields[$z]['Field'] == 'updated_on') {
+            if ($fields[$z]['Field'] == 'created_at' || $fields[$z]['Field'] == 'modified_at' || $fields[$z]['Field'] == 'updated_at' || $fields[$z]['Field'] == 'created_by' || $fields[$z]['Field'] == 'updated_by' || $fields[$z]['Field'] == 'updated_on') {
                 continue;
             }
             if ($fields[$z]['Field'] == 'id') {

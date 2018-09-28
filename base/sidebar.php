@@ -50,6 +50,17 @@
                 </ul>
             </li>
             <li><a href="{{url('/admin/setting')}}"><i class="fa fa-circle-o"></i>Settings</a></li>
+            <li class="treeview {{strpos($route, 'change_password')!==false?'menu-open':''}}">
+                <a href="#">
+                        <i class="fa fa-calendar"></i> <span>System</span>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                      </a>
+                <ul class="treeview-menu" style="{{strpos($route, 'change_password')!==false?'display: block;':''}}">
+                  <li class="{{$route=='change_password'?'active':''}}"><a href="{{url('/system/change_password')}}"><i class="fa fa-arrow-circle-o-right"></i>Change Password</a></li>
+                </ul>
+            </li>
         </ul>
     </section>
     <!-- /.sidebar -->

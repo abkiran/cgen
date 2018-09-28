@@ -31,6 +31,8 @@
     </php>
     <logging>
         <log type="coverage-html" target="./storage/report" 
-            lowUpperBound="50" highLowerBound="70" />
+            lowUpperBound="40" highLowerBound="60" />
+        <log type="junit" target="./storage/report/junit.xml"/>
+        <log type="coverage-clover" target="./storage/report/coverage-clover.xml"/>
     </logging>
 </phpunit>

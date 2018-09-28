@@ -35,9 +35,13 @@ class DefaultMail extends Mailable
      */
     public function build()
     {
-        return $this->view($this->data['view'])
+        return $this->view('admin.email')
+            ->with(['html'=>$this->data['content']])
+            ->to("kiran.reddy@clariontechnologies.co.in")
             ->subject($this->data['subject'])
-            ->replyTo('noreply.rma@kpodj.com', 'KPODJ Returns')
-            ->from($this->data['from']);
+            // ->replyTo('noreply.rma@kpodj.com', 'KPODJ Returns')
+            // ->from($this->data['cc'])
+            ->from("kiran.reddy@clariontechnologies.co.in");
+            // ->from($this->data['from']);
     }
 }

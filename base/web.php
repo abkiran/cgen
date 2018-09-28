@@ -22,6 +22,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('admin/setting', 'SettingController@settingsEdit');
     Route::post('admin/setting', 'SettingController@settingsUpdate');
 
+    // Change password
+    Route::view('system/change_password', 'common.change_password');
+    Route::post('system/change_password', 'UserController@changePassword');
+
     // Crud
 <?php for ($m=0; $m < $TABLES[0]['nrows']; $m++) {
     $t=strtolower($TABLES[$m]['Tables_in_'.$db_name]);
